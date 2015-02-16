@@ -14,7 +14,9 @@ using System.Text;
 /// </summary>
 public class LuaBehaviour : MonoBehaviour
 {
+    [System.NonSerialized]
     public bool usingUpdate = false;
+    [System.NonSerialized]
     public bool usingFixedUpdate = false;
     protected bool isLuaReady = false;
     private string script = "";
