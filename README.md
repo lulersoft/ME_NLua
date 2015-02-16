@@ -70,7 +70,7 @@ wwwroot目录为web服务器目录，请上传到您的web服务器 请修改ver
 
 //------------- now ----------------- 
 
-更多更新请同步 https://github.com/lulersoft/ME
+更多更新请同步 https://github.com/lulersoft/ME_NLua
 
 //-------------2015-2-1--------------- 版本 0.0.2
 
