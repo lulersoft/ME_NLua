@@ -8,6 +8,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using System.IO;
 using System.ComponentModel;
 using NLua;
+using System.Security.Cryptography;
 
 public class API  {
 
