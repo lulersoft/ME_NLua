@@ -33,8 +33,8 @@ using NLua.Method;
 using NLua.Exceptions;
 using NLua.Extensions;
 
-#if MONOTOUCH
-	using ObjCRuntime;
+#if UNITY_IOS&&!UNITY_EDITOR
+	using AOT;
 #endif
 
 namespace NLua
@@ -262,7 +262,7 @@ namespace NLua
 		 * Implementation of load_assembly. Throws an error
 		 * if the assembly is not found.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int LoadAssembly (LuaState luaState)
@@ -349,7 +349,7 @@ namespace NLua
 		 * Implementation of import_type. Returns nil if the
 		 * type is not found.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int ImportType (LuaState luaState)
@@ -376,7 +376,7 @@ namespace NLua
 		 * argument in the stack) as an object subclassing the
 		 * type passed as second argument in the stack.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int RegisterTable (LuaState luaState)
@@ -427,7 +427,7 @@ namespace NLua
 		 * Implementation of free_object. Clears the metatable and the
 		 * base field, freeing the created object for garbage-collection
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int UnregisterTable (LuaState luaState)
@@ -471,7 +471,7 @@ namespace NLua
 		 * Implementation of get_method_bysig. Returns nil
 		 * if no matching method is not found.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int GetMethodSignature (LuaState luaState)
@@ -523,7 +523,7 @@ namespace NLua
 		 * Implementation of get_constructor_bysig. Returns nil
 		 * if no matching constructor is found.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int GetConstructorSignature (LuaState luaState)
@@ -1001,7 +1001,7 @@ namespace NLua
 			return 2;
 		}
 
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int CType (LuaState luaState)
@@ -1020,7 +1020,7 @@ namespace NLua
 			return 1;
 		}
 
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int EnumFromInt (LuaState luaState)

@@ -31,7 +31,7 @@ using System.Reflection;
 using NLua.Extensions;
 
 
-#if !MONOTOUCH
+#if !(UNITY_IOS&&!UNITY_EDITOR)
 using System.Reflection.Emit;
 #endif
 using System.Collections;
@@ -55,7 +55,7 @@ namespace NLua
 		private static readonly CodeGeneration instance = new CodeGeneration ();
 		private AssemblyName assemblyName;
 
-#if !MONOTOUCH && !SILVERLIGHT && !NETFX_CORE
+		#if !(UNITY_IOS&&!UNITY_EDITOR) && !SILVERLIGHT && !NETFX_CORE
 		private Dictionary<Type, Type> eventHandlerCollection = new Dictionary<Type, Type> ();
 		private Type eventHandlerParent = typeof(LuaEventHandler);
 		private Type delegateParent = typeof(LuaDelegate);
@@ -75,7 +75,7 @@ namespace NLua
 			assemblyName = new AssemblyName ();
 			assemblyName.Name = "NLua_generatedcode";
 			// Create a new assembly with one module.
-#if !MONOTOUCH && !SILVERLIGHT && !NETFX_CORE
+			#if !(UNITY_IOS&&!UNITY_EDITOR) && !SILVERLIGHT && !NETFX_CORE
 			newAssembly = Thread.GetDomain ().DefineDynamicAssembly (assemblyName, AssemblyBuilderAccess.Run);
 			newModule = newAssembly.DefineDynamicModule ("NLua_generatedcode");
 #endif
@@ -93,8 +93,8 @@ namespace NLua
 		 */
 		private Type GenerateEvent (Type eventHandlerType)
 		{
-#if MONOTOUCH
-			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#if UNITY_IOS&&!UNITY_EDITOR
+			throw new NotImplementedException (" Emit not available on UNITY_IOS&&!UNITY_EDITOR ");
 #elif SILVERLIGHT
 			throw new NotImplementedException(" Emit not available on Silverlight ");
 #elif NETFX_CORE
@@ -137,7 +137,7 @@ namespace NLua
 		 */
 		private Type GenerateDelegate (Type delegateType)
 		{
-#if MONOTOUCH
+			#if UNITY_IOS&&USE_KERALUA
 			throw new NotImplementedException ("GenerateDelegate is not available on iOS, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
 #elif SILVERLIGHT
 			throw new NotImplementedException("GenerateDelegate is not available on Silverlight, please register your LuaDelegate type with Lua.RegisterLuaDelegateType( yourDelegate, theLuaDelegateHandler) ");
@@ -320,8 +320,8 @@ namespace NLua
 		 */
 		public void GenerateClass (Type klass, out Type newType, out Type[][] returnTypes)
 		{
-#if MONOTOUCH
-			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#if UNITY_IOS&&!UNITY_EDITOR
+			throw new NotImplementedException (" Emit not available on UNITY_IOS&&!UNITY_EDITOR ");
 #elif SILVERLIGHT
 			throw new NotImplementedException (" Emit not available on Silverlight ");
 #elif NETFX_CORE
@@ -430,7 +430,7 @@ namespace NLua
 			returnTypes = returnTypesList.ToArray ();
 		}
 
-#if !MONOTOUCH && !SILVERLIGHT && !NETFX_CORE
+		#if !(UNITY_IOS&&!UNITY_EDITOR) && !SILVERLIGHT && !NETFX_CORE
 
 		/*
 		 * Generates an overriden implementation of method inside myType that delegates
@@ -653,8 +653,8 @@ namespace NLua
 		 */
 		public LuaEventHandler GetEvent (Type eventHandlerType, LuaFunction eventHandler)
 		{
-#if MONOTOUCH
-			throw new NotImplementedException (" Emit not available on MonoTouch ");
+#if UNITY_IOS&&!UNITY_EDITOR
+			throw new NotImplementedException (" Emit not available on UNITY_IOS&&!UNITY_EDITOR ");
 #elif SILVERLIGHT
 			throw new NotImplementedException (" Emit not available on Silverlight ");
 #elif NETFX_CORE
