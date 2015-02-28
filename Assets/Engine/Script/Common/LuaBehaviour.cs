@@ -1,4 +1,4 @@
-﻿﻿using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
@@ -191,7 +191,7 @@ public class LuaBehaviour : MonoBehaviour
         }
         try
         {
-            //Debug.Log("DoFile:" + script);
+            Debug.Log("DoFile:" + script);
 
             object[] chunk = env.DoFile(script);
 
@@ -280,7 +280,7 @@ public class LuaBehaviour : MonoBehaviour
 
 		if (table == null || table[fn] == null || !(table[fn] is LuaFunction)) return result;
 
-		LuaFunction func = (LuaFunction)table[fn];// table.RawGet(fn) as LuaFunction;
+		LuaFunction func = (LuaFunction)table [fn];//table.RawGet(fn) as LuaFunction;
 
 		try
         {

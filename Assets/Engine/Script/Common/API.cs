@@ -9,7 +9,74 @@ using System.IO;
 using System.ComponentModel;
 using NLua;
 using System.Security.Cryptography;
+/// <summary>
+/// 后面将制作菜单用来搜索所有用得到的delegate Type，自动生成 N lua delegate.
+/// </summary>
+[AttributeUsage(AttributeTargets.Delegate)]
+public class NLuaDelegate : System.Attribute 
+{
+	public NLuaDelegate() 
+	{
+		//
+	}
+} 
+class CallbackLuaFunction : NLua.Method.LuaDelegate
+{
+	void CallFunction ()
+	{
+		object [] args = new object [] { };
+		object [] inArgs = new object [] {};
+		int [] outArgs = new int [] { };
+		base.CallFunction (args, inArgs, outArgs);
+	}
+}
+class CallbackLuaFunction<T> : NLua.Method.LuaDelegate
+{
+	void CallFunction (T arg1)
+	{
+		object [] args = new object [] { arg1 };
+		object [] inArgs = new object [] {arg1 };
+		int [] outArgs = new int [] { };
+		base.CallFunction (args, inArgs, outArgs);
+	}
+}
+class CallbackLuaFunction<T,U> : NLua.Method.LuaDelegate
+{
+	void CallFunction ( T arg1,U arg2)
+	{
+		object [] args = new object [] { arg1,arg2 };
+		object [] inArgs = new object [] {arg1,arg2 };
+		int [] outArgs = new int [] { };
+		base.CallFunction (args, inArgs, outArgs);
+	}
+}
+class CallbackLuaFunction<T,U,V> : NLua.Method.LuaDelegate
+{
+	void CallFunction (T arg1,U arg2,V arg3)
+	{
+		object [] args = new object [] { arg1,arg2 ,arg3};
+		object [] inArgs = new object [] {arg1,arg2 ,arg3};
+		int [] outArgs = new int [] { };
+		base.CallFunction (args, inArgs, outArgs);
+	}
+}
 
+public class LuaBinder{
+	public static void RegisterNLuaDelegate(Lua context){
+		//主要针对ios，aot下不能有动态模板映射,当kera模式在ios发布平台的时候
+		context.RegisterLuaDelegateType (typeof (EventListener.VoidDelegate), typeof (CallbackLuaFunction<GameObject>));
+		context.RegisterLuaDelegateType (typeof (Action<object>), typeof (CallbackLuaFunction<object>));
+		context.RegisterLuaDelegateType (typeof (Action), typeof (CallbackLuaFunction));
+		context.RegisterLuaDelegateType (typeof (Callback), typeof (CallbackLuaFunction));
+		context.RegisterLuaDelegateType (typeof (Callback<object>), typeof (CallbackLuaFunction<object>));
+		context.RegisterLuaDelegateType (typeof (Callback<string,AssetBundle>), typeof (CallbackLuaFunction<string,AssetBundle>));
+		context.RegisterLuaDelegateType (typeof (DownloadProgressChangedEventHandler), typeof (CallbackLuaFunction<object, DownloadProgressChangedEventArgs>));
+		context.RegisterLuaDelegateType (typeof (AsyncCompletedEventHandler), typeof (CallbackLuaFunction<object, AsyncCompletedEventArgs>));
+		context.RegisterLuaDelegateType (typeof (UploadProgressChangedEventHandler), typeof (CallbackLuaFunction<object, UploadProgressChangedEventArgs>));
+		context.RegisterLuaDelegateType (typeof (UploadStringCompletedEventHandler), typeof (CallbackLuaFunction<object, UploadStringCompletedEventArgs>));
+	}
+
+}
 public class API  {
 
     public static Hashtable BundleTable=new Hashtable();
@@ -24,6 +91,8 @@ public class API  {
                 lua.LoadCLRPackage();
                 //设置lua脚本文件查找路径
                 lua["package.path"] = lua["package.path"] + ";" + Application.persistentDataPath + "/lua/?.lua;";
+
+				LuaBinder.RegisterNLuaDelegate (lua);
             }
             return lua;
         }
@@ -96,21 +165,15 @@ public class API  {
     }
 
 	//异步HTTP
-    public static WebClientEx SendRequest(string url, string data, LuaFunction progressHander, LuaFunction completeHandler)
+	public static WebClientEx SendRequest(string url, string data, UploadProgressChangedEventHandler progressHander, UploadStringCompletedEventHandler completeHandler)
     {
         WebClientEx webClient = new WebClientEx();
         webClient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";  //采取POST方式必须加的header，如果改为GET方式的话就去掉这句话即可  
         webClient.Encoding = System.Text.UTF8Encoding.UTF8;
         System.Uri uri = new System.Uri(url);
 
-        webClient.UploadProgressChanged += (object sender, UploadProgressChangedEventArgs e) =>
-        {
-            progressHander.Call(sender,e);
-        };
-        webClient.UploadStringCompleted += (object sender, UploadStringCompletedEventArgs e) =>
-        {
-            completeHandler.Call(sender,e);
-        };
+		webClient.UploadProgressChanged += progressHander;
+		webClient.UploadStringCompleted += completeHandler;
 
         try
         {
@@ -125,18 +188,11 @@ public class API  {
     }
  
     //异步下载
-    public static WebClient DownLoad(string src, string SavePath, LuaFunction progressHander, LuaFunction completeHander)
+	public static WebClient DownLoad(string src, string SavePath, DownloadProgressChangedEventHandler progressHander, AsyncCompletedEventHandler completeHander)
     {
         WebClient client = new WebClient();
-        client.DownloadProgressChanged += (object sender, DownloadProgressChangedEventArgs e) =>
-        {
-            progressHander.Call(sender,e);
-        };
-        client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
-        {
-            completeHander.Call(sender,e);
-        };
-
+		client.DownloadProgressChanged += progressHander;
+		client.DownloadFileCompleted += completeHander;
         try
         {
             client.DownloadFileAsync(new System.Uri(src), SavePath);

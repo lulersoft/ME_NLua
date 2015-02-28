@@ -98,11 +98,14 @@ function main.StartGame()
 end
 
 function main.RunMoleGame( )
-	Debug.Log("启动打地鼠游戏")
+	Debug.Log("Start DDS Game")
 
-	local game = GameObject("moleGame")
-	local lb = game:AddComponent("LuaBehaviour")
-	lb:DoFile("moleGame")
+	-- local game = GameObject("moleGame")
+	-- local lb = game:AddComponent("LuaBehaviour")
+	-- lb:DoFile("moleGame")
+	local game=require "moleGame";
+	game.this=this;
+	game.Start();
 end
 
 --下载进度回调

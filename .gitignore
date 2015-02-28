@@ -1,0 +1,8 @@
+
+Library/*
+
+Temp/*
+*.sln
+*.csproj
+ProjectSettings/*
+ProjectSettings/ProjectSettings.asset

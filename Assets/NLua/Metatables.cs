@@ -33,8 +33,8 @@ using System.Runtime.InteropServices;
 using NLua.Method;
 using NLua.Extensions;
 
-#if MONOTOUCH
-	using ObjCRuntime;
+#if UNITY_IOS&&!UNITY_EDITOR
+	using AOT;
 #endif
 
 namespace NLua
@@ -129,7 +129,7 @@ namespace NLua
 		/*
 		 * __call metafunction of CLR delegates, retrieves and calls the delegate.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int RunFunctionDelegate (LuaState luaState)
@@ -148,7 +148,7 @@ namespace NLua
 		/*
 		 * __gc metafunction of CLR objects.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int CollectObject (LuaState luaState)
@@ -170,7 +170,7 @@ namespace NLua
 		/*
 		 * __tostring metafunction of CLR objects.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int ToStringLua (LuaState luaState)
@@ -195,7 +195,7 @@ namespace NLua
 /*
  * __add metafunction of CLR objects.
  */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		static int AddLua (LuaState luaState)
@@ -207,7 +207,7 @@ namespace NLua
 		/*
 		* __sub metafunction of CLR objects.
 		*/
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		static int SubtractLua (LuaState luaState)
@@ -219,7 +219,7 @@ namespace NLua
 		/*
 		* __mul metafunction of CLR objects.
 		*/
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		static int MultiplyLua (LuaState luaState)
@@ -231,7 +231,7 @@ namespace NLua
 		/*
 		* __div metafunction of CLR objects.
 		*/
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		static int DivideLua (LuaState luaState)
@@ -243,7 +243,7 @@ namespace NLua
 		/*
 		* __mod metafunction of CLR objects.
 		*/
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		static int ModLua (LuaState luaState)
@@ -255,7 +255,7 @@ namespace NLua
 		/*
 		* __unm metafunction of CLR objects.
 		*/
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		static int UnaryNegationLua (LuaState luaState)
@@ -291,7 +291,7 @@ namespace NLua
 		/*
 		* __eq metafunction of CLR objects.
 		*/
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		static int EqualLua (LuaState luaState)
@@ -303,7 +303,7 @@ namespace NLua
 		/*
 		* __lt metafunction of CLR objects.
 		*/
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		static int LessThanLua (LuaState luaState)
@@ -315,7 +315,7 @@ namespace NLua
 		/*
 		 * __le metafunction of CLR objects.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		static int LessThanOrEqualLua (LuaState luaState)
@@ -368,7 +368,7 @@ namespace NLua
 		 * either the value of the member or a delegate to call it.
 		 * If the member does not exist returns nil.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int GetMethod (LuaState luaState)
@@ -477,7 +477,7 @@ namespace NLua
 		 * __index metafunction of base classes (the base field of Lua tables).
 		 * Adds a prefix to the method name to call the base version of the method.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int GetBaseMethod (LuaState luaState)
@@ -767,7 +767,7 @@ namespace NLua
 		 * the member name and the value to be stored as arguments. Throws
 		 * and error if the assignment is invalid.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int SetFieldOrProperty (LuaState luaState)
@@ -949,7 +949,7 @@ namespace NLua
 		/*
 		 * __index metafunction of type references, works on static members.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int GetClassMethod (LuaState luaState)
@@ -990,7 +990,7 @@ namespace NLua
 		/*
 		 * __newindex function of type references, works on static members.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int SetClassFieldOrProperty (LuaState luaState)
@@ -1017,7 +1017,7 @@ namespace NLua
 		/*
 		 * __call metafunction of Delegates. 
 		 */
-		#if MONOTOUCH
+		#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 		#endif
 		static int CallDelegate (LuaState luaState)
@@ -1071,7 +1071,7 @@ namespace NLua
 		 * found or if the arguments are invalid. Throws an error if the constructor
 		 * generates an exception.
 		 */
-#if MONOTOUCH
+#if UNITY_IOS&&!UNITY_EDITOR
 		[MonoPInvokeCallback (typeof (LuaNativeFunction))]
 #endif
 		private static int CallConstructor (LuaState luaState)
