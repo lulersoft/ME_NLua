@@ -79,7 +79,7 @@ public class Packager
         //获取在Project视图中选择的所有游戏对象
         Object[] SelectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
         BuildTarget target = GetTargetPlatform();
-        string assetPath = Application.dataPath + "/Data/asset/" + target.ToString().ToLower() + "/";
+        string assetPath = Application.dataPath + "/Data/asset/" + target.ToString() + "/";
 
         if (!Directory.Exists(assetPath))
         {
@@ -163,7 +163,7 @@ public class Packager
     {
         // string dir = Application.dataPath + "/StreamingAssets";
         BuildTarget target = GetTargetPlatform();
-        string assetPath = Application.dataPath + "/Data/asset/" + target.ToString().ToLower() + "/Atlas/";
+        string assetPath = Application.dataPath + "/Data/asset/" + target.ToString() + "/Atlas/";
 
         if (!Directory.Exists(assetPath))
         {
@@ -193,17 +193,20 @@ public class Packager
     /// </summary>
     static string AppDataPath
     {
-        get { return Application.dataPath.ToLower(); }
+        get { return Application.dataPath; }
     }
 
     static private BuildTarget GetBuildTarget()
     {
         BuildTarget target = BuildTarget.WebPlayer;
 #if UNITY_STANDALONE
+		Debug.Log ("build for win");
         target = BuildTarget.StandaloneWindows;
 #elif UNITY_IPHONE
+		Debug.Log ("build for ios");
 			target = BuildTarget.iPhone;
 #elif UNITY_ANDROID
+			Debug.Log ("build for android");
 			target = BuildTarget.Android;
 #endif
         return target;
@@ -212,16 +215,7 @@ public class Packager
     //资源目标平台
     static BuildTarget GetTargetPlatform()
     {
-        BuildTarget target;
-        if (Application.platform == RuntimePlatform.OSXEditor)
-        {
-            target = BuildTarget.iPhone;
-        }
-        else
-        {
-            target = BuildTarget.Android;
-        }
-        return target;
+		return GetBuildTarget ();
 
     }
 
