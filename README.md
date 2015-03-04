@@ -3,7 +3,7 @@
 
 基于https://github.com/Mervill/Unity3D-NLua
 
-整理：小陆(QQ2604904) 参与者：顶梁猪(QQ756500)
+整理：小陆(QQ2604904) 参与者：顶梁猪(QQ756500), html5solo
 
 ##框架目标
 
