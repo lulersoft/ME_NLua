@@ -30,16 +30,22 @@ function main.Start()
 	AssetRoot=this.AssetRoot	
 
 	--检测更新 
-    main.checkVersion() 
+    --main.checkVersion() 
 
     --性能测试
  	--main.testdemo()
+
+ 	--直接启动打地鼠游戏
+ 	main.RunMoleGame()
+
+ 	--Debug.Log(LuaBehaviour)
 end
 
 --性能测试
 function main.testdemo()
 	local game = GameObject("Performance")
-	local lb = game:AddComponent("LuaBehaviour")
+	--local lb = game:AddComponent("LuaBehaviour")
+	local lb = API.AddComponent(game,"LuaBehaviour")
 	lb:DoFile("demo")
 end
 
@@ -97,15 +103,12 @@ function main.StartGame()
 	this:AddMission(main.RunMoleGame,nil)
 end
 
-function main.RunMoleGame( )
-	Debug.Log("Start DDS Game")
+function main.RunMoleGame( )	
 
-	-- local game = GameObject("moleGame")
-	-- local lb = game:AddComponent("LuaBehaviour")
-	-- lb:DoFile("moleGame")
-	local game=require "moleGame";
-	game.this=this;
-	game.Start();
+	local game = GameObject("moleGame")
+	local lb = API.AddComponent(game,"LuaBehaviour")
+	lb:DoFile("moleGame")
+
 end
 
 --下载进度回调

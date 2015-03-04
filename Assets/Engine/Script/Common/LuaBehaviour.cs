@@ -91,13 +91,13 @@ public class LuaBehaviour : MonoBehaviour
     {
         if (API.BundleTable.ContainsKey(fname))
         {
-            AssetBundle bundle = API.BundleTable[fname] as AssetBundle;
+            AssetBundle bundle = API.BundleTable[fname] as AssetBundle;   
             if (handler != null) handler(name, bundle);
         }
         else
         {
             StartCoroutine(onLoadBundle(fname, handler));
-        }
+        }     
     }
 
     public void UnLoadAllBundle()

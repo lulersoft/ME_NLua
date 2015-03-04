@@ -97,6 +97,11 @@ public class API  {
             return lua;
         }
     }
+    public static object AddComponent(GameObject obj,string classname)
+    {
+        Type t = Type.GetType(classname);
+        return obj.AddComponent(t);
+    }
     //zip压缩
     public static void PackFiles(string filename, string directory)
     {

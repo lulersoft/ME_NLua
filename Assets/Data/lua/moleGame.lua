@@ -100,7 +100,7 @@ end
 function game.onLoadComplete(uri,bundle)
 
 	if uri=="GUI" then
-		local prefab = bundle:Load("GUI")
+		local prefab = bundle.mainAsset
 		local guiGo=GameObject.Instantiate(prefab)
 		guiGo.name="GUI"
 
@@ -155,7 +155,7 @@ function game.onLoadComplete(uri,bundle)
 
  	elseif uri=="molePre" then
  		local name="molePre"
- 		local prefab = bundle:Load(name) 
+ 		local prefab = bundle:LoadAsset(name)--bundle.mainAsset--bundle:Load(name) 
 
  		local idx=0
  		local x=0
@@ -182,9 +182,10 @@ function game.onLoadComplete(uri,bundle)
         	--moleGo.transform.parent = uibgArr[idx] 这个方法在ugui已经过期，使用SetParent()替换
         	moleGo.transform:SetParent(uibgArr[idx])
         	moleGo.transform.localScale = Vector3.one
-        	moleGo.transform.localPosition = Vector3(x,y,0)
-        	
-        	local lb=moleGo:AddComponent("LuaBehaviour")        
+        	moleGo.transform.localPosition = Vector3(x,y,0)   	
+        
+        	--local lb=moleGo:AddComponent("LuaBehaviour") --这个方法在unity 5.x已经过期
+        	local lb = API.AddComponent(moleGo,"LuaBehaviour")
         	lb:SetEnv("MoleAtlas",MoleAtlas,true)
         	lb:DoFile("mole")
 

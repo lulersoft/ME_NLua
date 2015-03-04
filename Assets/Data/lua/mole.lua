@@ -30,8 +30,7 @@ function mole.Start()
 	image=gameObject:GetComponent("Image")
     animator=gameObject:GetComponent("Animator")
 
-	sprite4=MoleAtlas:Load("Mole04")
-
+	sprite4=MoleAtlas:LoadAsset("Mole04")
 
 	EventListener.Get(gameObject).onClick=mole.onClick
 
