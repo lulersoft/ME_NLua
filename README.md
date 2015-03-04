@@ -39,7 +39,7 @@ wwwroot目录为web服务器目录，请上传到您的web服务器 请修改ver
 
 ##项目编译设置
 
-在BuildSetting里，iOS的"Scripting Define Symbols"需要设置为：
+在BuildSetting里，Player Setting ... 的Other Setting 下面的"Scripting Define Symbols"需要设置为：
 
 UNITY_3D;USE_KERALUA;LUA_CORE;CATCH_EXCEPTIONS
 
