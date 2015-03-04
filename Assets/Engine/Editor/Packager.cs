@@ -79,7 +79,7 @@ public class Packager
         //获取在Project视图中选择的所有游戏对象
         Object[] SelectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
         BuildTarget target = GetTargetPlatform();
-        string assetPath = Application.dataPath + "/Data/asset/" + target.ToString() + "/";
+        string assetPath = Application.dataPath + "/Data/asset/" + target.ToString().ToLower() + "/";
 
         if (!Directory.Exists(assetPath))
         {
@@ -163,7 +163,7 @@ public class Packager
     {
         // string dir = Application.dataPath + "/StreamingAssets";
         BuildTarget target = GetTargetPlatform();
-        string assetPath = Application.dataPath + "/Data/asset/" + target.ToString() + "/Atlas/";
+        string assetPath = Application.dataPath + "/Data/asset/" + target.ToString().ToLower() + "/Atlas/";
 
         if (!Directory.Exists(assetPath))
         {
