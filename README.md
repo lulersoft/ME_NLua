@@ -37,11 +37,14 @@ wwwroot目录为web服务器目录，请上传到您的web服务器 请修改ver
 
 首次运行工程(Assets/Engine/Scene/Demo.unity),程序从 StreamingAssets 中复制资源文件data.zip并解压到可读目标目录，然后从这可读目标目录加载主入口文件main.lua 执行,框架所有逻辑全部尽可能在lua端执行 。如：在lua中进行版本检测，下载zip，解压覆盖以后每次运行，会检测远程服务器版本，如果有更新，则下载，并自动解压覆盖资源目录。
 
-##打包编译设置
+##项目编译设置
+
 在BuildSetting里，iOS的"Scripting Define Symbols"需要设置为：
-    UNITY_IPHONE;UNITY_3D;USE_KERALUA;LUA_CORE;CATCH_EXCEPTIONS
-安卓为：
-    UNITY_ANDROID;UNITY_3D;USE_KERALUA;LUA_CORE;CATCH_EXCEPTIONS
+
+UNITY_3D;USE_KERALUA;LUA_CORE;CATCH_EXCEPTIONS
+
+其中 USE_KERALUA 代表为使用c版lua加速，也可解决打印（Debug.Log）中文日志显示乱码问题。（推荐）
+
 
 ##特性：
 1)全lua代码编写游戏。
