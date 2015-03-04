@@ -1,4 +1,4 @@
-﻿﻿using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System.Text;
@@ -166,7 +166,7 @@ public class Packager
                 string dir = allPath.Substring(allPath.IndexOf("Assets"));
                 assets.Add(Resources.LoadAssetAtPath<Sprite>(dir));
             }
-            if (BuildPipeline.BuildAssetBundle(null, assets.ToArray(), path, BuildAssetBundleOptions.CollectDependencies, target))
+            if (BuildPipeline.BuildAssetBundle(null, assets.ToArray(), path, BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.CollectDependencies, target))
             {
             }
         }
