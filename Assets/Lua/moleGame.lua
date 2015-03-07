@@ -47,8 +47,8 @@ function game.Run()
 	--添加侦听 跑了一只鼹鼠
 	this:AddListener2("missing one mole",game.onMissMole)
 
-	--加载UI
-	local name = "GUI"
+	--加载共享的图集
+	local name = "moleatlas.ab"
 	this:LoadBundle(name,game.onLoadComplete)
 end
 
@@ -85,22 +85,29 @@ end
 
 
 --退出系统
-game.touchTime=0
+local touchTime=0
 function game.onKeyBackDown()
-	if Input.GetKeyUp(KeyCode.Escape) then		
-		if Time.realtimeSinceStartup-game.touchTime >=2000 then	
-			--Debug.Log(Time.realtimeSinceStartup-touchTime)
-			game.touchTime=Time.realtimeSinceStartup
+	
+	if Input.GetKeyUp(KeyCode.Escape) then
+		
+		if Time.realtimeSinceStartup-touchTime >=2 then	
+			API.Log("再按一次退出")
+			touchTime=Time.realtimeSinceStartup			
 		else
 			Application.Quit()
-		end		
+		end	
+			
 	end
+
 end
 
 function game.onLoadComplete(uri,bundle)
 
-	if uri=="GUI" then
-		local prefab = bundle.mainAsset
+	API.Log(uri)
+
+	if uri=="gui.ab" then
+
+		local prefab = bundle:LoadAsset("Assets/Builds/GUI/Prefab/GUI.prefab")
 		local guiGo=GameObject.Instantiate(prefab)
 		guiGo.name="GUI"
 
@@ -142,19 +149,19 @@ function game.onLoadComplete(uri,bundle)
 		local versionText=uiver:GetComponent("Text")
 		versionText.text="version:"..tostring(version)		
 		
-		--加载鼹鼠sprite Altas
-		local name = "Atlas/MoleAtlas"
-		this:LoadBundle(name,game.onLoadComplete)  
+		--加载鼹鼠prefab
+		local name = "molepre.ab"
+		this:LoadBundle(name,game.onLoadComplete) 		
 
-	elseif uri=="Atlas/MoleAtlas" then
+	elseif uri=="moleatlas.ab" then
 		MoleAtlas = bundle
 
-		--加载鼹鼠prefab
-		local name = "molePre"
-		this:LoadBundle(name,game.onLoadComplete)            
+		--加载鼹鼠sprite Altas
+		local name = "gui.ab"
+		this:LoadBundle(name,game.onLoadComplete)  
 
- 	elseif uri=="molePre" then
- 		local name="molePre"
+ 	elseif uri=="molepre.ab" then
+ 		local name="Assets/Builds/GUI/Prefab/molePre.prefab"
  		local prefab = bundle:LoadAsset(name)--bundle.mainAsset--bundle:Load(name) 
 
  		local idx=0
@@ -228,10 +235,10 @@ function game.Update()
 end
 
 
-function game.onTimer(source,e)	
+function game.onTimer(source)	
 	--切换为主线程执行
 	if gameOver==false then
-		this:AddMission(game.moleComeOut,nil)     
+		game.moleComeOut()    
 	end
 end
 

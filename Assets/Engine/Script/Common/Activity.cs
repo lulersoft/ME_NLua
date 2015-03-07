@@ -12,28 +12,28 @@ public class Activity : LuaBehaviour
 
     protected bool isDebug = false;
    	protected string _name = "main.lua";
-
+       
     void Awake()
     {       
         InitAsstes(); 
     }
-
+    
     IEnumerator loadStreamingAssets()
     {
         string sorucefilename = "data.zip";
-        string filename = Application.persistentDataPath + "/" + sorucefilename;
-        string log = "";        
+        string filename = API.AssetRoot + sorucefilename;
+        API.Log("");        
 
         byte[] bytes = null;
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
 
         string sourcepath = "file:///" + Application.streamingAssetsPath + "/" + sorucefilename;
-        log += "asset path is: " + sourcepath;
+        API.Log ( "asset path is: " + sourcepath);
         WWW www = new WWW(sourcepath);
         yield return www;
         if (www.error != null)
         {
-            Debug.Log("Warning errow: " + "loadStreamingAssets");
+            API.Log  ("Warning errow: " + "loadStreamingAssets");
             yield break;
         }
         bytes = www.bytes;
@@ -44,7 +44,7 @@ public class Activity : LuaBehaviour
         yield return www;
         if (www.error != null)
         {           
-            Debug.Log("Warning errow: " + "loadStreamingAssets");
+            API.Log  ("Warning error: " + "loadStreamingAssets");
             yield break;
         }
 		bytes = www.bytes; 
@@ -56,22 +56,22 @@ public class Activity : LuaBehaviour
 				fs.Read(bytes,0,(int)fs.Length); 
 			}   
 		} catch (System.Exception e){ 
-			log +=  "\nTest Fail with Exception " + e.ToString(); 
-			log +=  "\n"; 
+			API.Log ("\nTest Fail with Exception " + e.ToString()); 
+			
 		} 
 #elif UNITY_ANDROID 
 		string sourcepath = "jar:file://" + Application.dataPath + "!/assets/"+sorucefilename; 			
-		//Debug.Log("文件路径为：" + sourcepath); 
-		log += "asset path is: " + sourcepath; 
+		//API.Log("文件路径为：" + sourcepath); 
+		API.Log( "asset path is: " + sourcepath); 
 		WWW www = new WWW(sourcepath); 
         yield return www;
         if (www.error != null)
         {           
-            Debug.Log("Warning errow: " + "loadStreamingAssets");
+             API.Log("Warning error: " + "loadStreamingAssets");
             yield break;
         }
 		bytes = www.bytes; 
-		//Debug.Log("字节长度为：" + bytes.Length); 
+		//API.Log("字节长度为：" + bytes.Length); 
 #endif
         if (bytes != null)
         {
@@ -81,12 +81,12 @@ public class Activity : LuaBehaviour
             using (FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write))
             {
                 fs.Write(bytes, 0, bytes.Length);
-                log += "\nCopy res form streaminAssets to persistentDataPath: " + filename;
+               API.Log( "\nCopy res form streaminAssets to persistentDataPath: " + filename);
                 fs.Close();
             }
 
             //解压缩
-            API.UnpackFiles(filename, Application.persistentDataPath + "/");
+            API.UnpackFiles(filename, API.AssetRoot);
 
             yield return new WaitForEndOfFrame();
 
@@ -95,9 +95,7 @@ public class Activity : LuaBehaviour
 
             yield return new WaitForEndOfFrame();
 
-            log += string.Format("\n{0} created!  ", "UnpackFiles");
-			
-			Debug.Log(log);
+            API.Log( string.Format("\n{0} created!  ", "UnpackFiles"));					
 
 			//加载入口文件 main.lua
             DoFile(_name); 
@@ -105,8 +103,8 @@ public class Activity : LuaBehaviour
         }
     }
     void InitAsstes()
-    {        
-        string mainfile = Application.persistentDataPath + "/lua/"+_name;
+    {
+        string mainfile = API.AssetRoot + "lua/" + _name;
         //如果入口主main.lua未找到       
         if (!File.Exists(mainfile) || isDebug)
         {

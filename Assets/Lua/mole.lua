@@ -30,7 +30,8 @@ function mole.Start()
 	image=gameObject:GetComponent("Image")
     animator=gameObject:GetComponent("Animator")
 
-	sprite4=MoleAtlas:LoadAsset("Mole04")
+	local _text2d=MoleAtlas:LoadAsset("Assets/Atlas/MoleAtlas/Mole04.png")
+	sprite4=Sprite.Create(_text2d,Rect(0,0,56,79),Vector2(0.5,0.5))
 
 	EventListener.Get(gameObject).onClick=mole.onClick
 
