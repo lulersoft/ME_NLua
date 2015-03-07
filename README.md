@@ -87,6 +87,8 @@ ME Tools/4.同步到缓存 : 直接复制Asset->Lua目录(内含所有lua脚本�
 
 (3) 修改lua定时器，更加稳定
 
+(4) 添加屏幕打印日志函数： API.Log()
+
 更多更新请同步 https://github.com/lulersoft/ME_NLua
 
 //-------------2015-2-1--------------- 版本 0.0.2
