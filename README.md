@@ -27,7 +27,7 @@ Assets/Atlas 将要打包的ui图片
 
 Assets/Builds 将要打包的预置物
 
-Assets/Data 为资源输出目录和lua脚本目录，此文件夹将被压缩为zip放入Assets/StreamingAssets
+Assets/Data 升级包源目录（含全部资源和lua脚本），此文件夹将被压缩为zip放入Assets/StreamingAssets
 
 Assets/StreamingAssets 为zip更新包输出目录，在执行ME Tools 菜单相关选项生成后，请把一份上传到wwwroot服务器目录内，供客户端下载更新。
 
@@ -60,24 +60,32 @@ UNITY_3D;USE_KERALUA;LUA_CORE;CATCH_EXCEPTIONS
 
 ##地鼠游戏资源打包以及编辑脚本测试使用帮助
 
-1.执行编辑器菜单 ME tools/清理缓存,让一切重新开始.
+1.执行编辑器菜单 ME tools/1.清理缓存,让一切重新开始.
 
-2.执行编辑器菜单 ME tools/把Atlas目录下的.png图片作为图集资源并放入Data目录.
+2.执行编辑器菜单 ME tools/2.制作资源包 : 自动生成资源包并放入Asset->Data->asset目录 (for Unity5.0+)".
 
-3.在Project窗体内 鼠标点选选中 Assets/Builds/GUI,然后 执行编辑器菜单 ME tools/独立打包选中目录下的各个对象并放入Data目录
+3.执行编辑器菜单 ME Tools/3.制作更新包 : 把Asset->Data目录压缩为一个zip包并放入StreamingAssets目录
 
-4.执行编辑器菜单 ME tools/制作更新包：把Data目录压缩为一个zip包并放入StreamingAssets目录
+
 
 通过以上步骤完成资源和升级包的制作了。
 
 如果在编辑器进行代码修改或者资源修改，请重复以上步骤。
 
-如果仅仅修改 Assets/Data/lua 下的逻辑脚本，您只需要执行以上的1和4步骤。
+如果仅仅修改 Assets/Data/lua 下的逻辑脚本，您只需要执行编辑器菜单：
+
+ME Tools/4.同步到缓存 : 直接复制Asset->Lua目录(内含所有lua脚本文件)到缓存。
 
 
 ##更新历史:
 
-//------------- now -----------------
+//------------- 2015-3-7 -----------------
+
+(1) 使用unity3d 5.0最新的资源打包方式
+
+(2) 添加资源加密解密(rc4)
+
+(3) 修改lua定时器，更加稳定
 
 更多更新请同步 https://github.com/lulersoft/ME_NLua
 
