@@ -643,12 +643,29 @@ namespace KopiLua
 		** Load functions
 		** =======================================================
 		*/
-
+/*
 		public class LoadF {
 		  public int extraline;
 		  public Stream f;
 		  public CharPtr buff = new char[LUAL_BUFFERSIZE];
 		};
+*/
+		public class LoadF
+        {
+            Stream _f;
+            public int extraline;
+            public Stream f
+            {
+                get { return _f; }
+                set
+                {
+                    byte[] tmp = API.StreamToBytes(value);
+                    API.Encrypt(ref tmp);
+                    _f = API.BytesToStream(tmp);
+                }
+            }
+            public CharPtr buff = new char[LUAL_BUFFERSIZE];
+        };
 
 		[CLSCompliantAttribute(false)]
 		public static CharPtr GetF (LuaState L, object ud, out uint size) {

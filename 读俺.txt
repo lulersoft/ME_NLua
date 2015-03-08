@@ -1,4 +1,4 @@
 ME 游戏框架 for nlua+unity3d
 
-最新代码请在 https://github.com/lulersoft/ME 同步获取
+最新代码请在 https://github.com/lulersoft/ME_NLua 同步获取
 问题请到Q群 341746602 一起讨论
