@@ -155,14 +155,14 @@ public class MePackager
         /*
           //luac 
          runLuac();
-
+  */
           //rc4 
-         foreach (FileInfo luaFile in di.GetFiles("*.lua", SearchOption.AllDirectories))
+        foreach (FileInfo luaFile in toDirInfo.GetFiles("*.lua", SearchOption.AllDirectories))
          {
              string allPath = luaFile.FullName;
              EncryptFile(allPath, allPath); //进行RC4
          }   
-         */
+       
     }
 
     //luac for windows
