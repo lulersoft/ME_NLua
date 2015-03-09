@@ -261,29 +261,29 @@ public class API  {
         return client;
     }
 
-   //时钟
-    public static Timer AddTimer(float interval, Callback<Timer> onTimerHander)
+     //时钟
+    public static MeTimer AddTimer(float interval, Callback<MeTimer> onTimerHander)
     {
         return AddTimer(interval, 0, onTimerHander);
     }
-    public static Timer AddTimer(float interval,int loop, Callback<Timer> onTimerHander)
+    public static MeTimer AddTimer(float interval, int loop, Callback<MeTimer> onTimerHander)
     {
-        if(LuaTimer.obj==null)
+        if(LuaMeTimer.obj==null)
         {
-            LuaTimer.obj = new GameObject("LuaTimer");
-            LuaTimer.obj.AddComponent<LuaTimer>();
+            LuaMeTimer.obj = new GameObject("LuaMeTimer");
+            LuaMeTimer.obj.AddComponent<LuaMeTimer>();
         }
-        Timer timer = new Timer();
+        MeTimer timer = new MeTimer();
         timer.onTimer = onTimerHander;
         timer.interval = interval;
         timer.loop = loop;
 
-        LuaTimer.TimerList.Add(timer);
+        LuaMeTimer.TimerList.Add(timer);
 
         return timer;
     }
     
-    public static void KillTimer(Timer timer)
+    public static void KillTimer(MeTimer timer)
     {
         if (timer != null)
         {
