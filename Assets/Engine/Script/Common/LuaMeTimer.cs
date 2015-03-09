@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class LuaTimer : MonoBehaviour {
+public class LuaMeTimer : MonoBehaviour {
 
     public static GameObject obj=null;
 
-    public static List<Timer> TimerList = new List<Timer>();
+    public static List<MeTimer> TimerList = new List<MeTimer>();
     
 	void Awake () {
 	    obj=this.gameObject;
@@ -23,9 +23,9 @@ public class LuaTimer : MonoBehaviour {
         nowTime += deltaTime;
         if (TimerList.Count > 0)
         {
-            List<Timer> tmp = new List<Timer>();
+            List<MeTimer> tmp = new List<MeTimer>();
 
-            foreach (Timer t in TimerList)
+            foreach (MeTimer t in TimerList)
             {
                 if (t.close)
                 {                   
@@ -60,7 +60,7 @@ public class LuaTimer : MonoBehaviour {
                 } 
             }
 
-            foreach (Timer t in tmp)
+            foreach (MeTimer t in tmp)
             {
                 TimerList.Remove(t);
             }
@@ -71,11 +71,11 @@ public class LuaTimer : MonoBehaviour {
 }
 
 
-public class Timer
+public class MeTimer
 {
     public int id = 0;
-    public Callback<Timer> onTimer = null;
-    public Callback<Timer> onCompleted = null; //完成
+    public Callback<MeTimer> onTimer = null;
+    public Callback<MeTimer> onCompleted = null; //完成
     public float interval = 0;//间隔时间
     public float deltaTime=0;
     public int delay = 0;//延迟时间
@@ -85,7 +85,7 @@ public class Timer
     public bool close = false; 
 
     static int gid=0;
-    public Timer()
+    public MeTimer()
     {
         id = ++gid;
     }
