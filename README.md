@@ -21,7 +21,7 @@ ME框架的思路就是 一个GameObject 对应挂个LuaBehaviour.cs脚本，这
 ![](demo.jpg)
 
 ##安装说明
-Assets/Engine 为本框所有架核心代码，其它请和 https://github.com/Mervill/Unity3D-NLua 保持一致.
+Assets/Lua 为lua脚本源码目录
 
 Assets/Engine 为本框所有架核心代码
 
@@ -29,9 +29,9 @@ Assets/Atlas 将要打包的ui图片
 
 Assets/Builds 将要打包的预置物
 
-Assets/Data 升级包源目录（含全部资源和lua脚本），此文件夹将被压缩为zip放入Assets/StreamingAssets
+Assets/Data 升级包资源输出目录（含最终全部加密后的资源与lua脚本），此文件夹将被压缩为zip放入Assets/StreamingAssets
 
-Assets/StreamingAssets 为zip更新包输出目录，在执行ME Tools 菜单相关选项生成后，请把一份上传到wwwroot服务器目录内，供客户端下载更新。
+Assets/StreamingAssets 为zip更新包输出目录，在执行ME Tools 菜单相关选项生成会自动生成data.zip包（也就是压缩Assets/Data目录），请把一份上传到wwwroot服务器目录内，供客户端下载更新。
 
 Assets/Engine/Scene/Demo.unity  为测试场景
 
