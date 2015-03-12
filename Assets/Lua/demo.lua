@@ -13,16 +13,16 @@ function demo.Start()
 	transform=demo.transform	
 
 	--添加个照相机
-	local carm=GameObject("carm")
-	API.AddComponent(carm,"Camera")
+	local carm=GameObject("carm")	
+	API.AddComponent(carm,Camera)
 	
 	carm.transform.localPosition=Vector3(9,3,-17)
 
 	--来一束光照亮测试场景
-	local light = API.AddComponent(carm,"Light")
+	local light = API.AddComponent(carm,Light)
 	light.type=LightType.Directional
 
-	demo.test1()
+	--demo.test1()
 end
 
 function demo.test1()

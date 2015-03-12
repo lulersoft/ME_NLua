@@ -33,19 +33,18 @@ function main.Start()
     --main.checkVersion() 
 
     --性能测试
- 	--main.testdemo()
+ 	main.testdemo()
 
  	--直接启动打地鼠游戏
- 	main.RunMoleGame()
+ 	--main.RunMoleGame()
 
  	--Debug.Log(LuaBehaviour)
 end
 
 --性能测试
 function main.testdemo()
-	local game = GameObject("Performance")
-	--local lb = game:AddComponent("LuaBehaviour")
-	local lb = API.AddComponent(game,"LuaBehaviour")
+	local game = GameObject("Performance")	
+	local lb = API.AddComponent(game,LuaBehaviour)
 	lb:DoFile("demo")
 end
 

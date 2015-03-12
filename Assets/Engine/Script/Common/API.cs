@@ -137,6 +137,26 @@ public class API  {
     }
     #endregion
 
+    //	--lua中添加个照相机例子：
+	// local carm=GameObject("carm")	
+	// API.AddComponent(carm,Camera)
+
+    public static object AddComponent(GameObject obj, ProxyType t)
+    {        
+        return obj.AddComponent(t.UnderlyingSystemType);
+    }
+
+    public static object AddMissComponent(GameObject obj, ProxyType t)
+    {
+        Type _t = t.UnderlyingSystemType;
+        object _out = obj.GetComponent(_t);
+        if (_out == null)
+        {
+            _out = obj.AddComponent(_t);
+        }
+        return _out;
+    }
+
    public static object AddComponent(GameObject obj,string classname)
     {
         Type t = Type.GetType(classname);
