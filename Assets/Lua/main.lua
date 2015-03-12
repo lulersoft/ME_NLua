@@ -33,10 +33,10 @@ function main.Start()
     --main.checkVersion() 
 
     --性能测试
- 	main.testdemo()
+ 	--main.testdemo()
 
  	--直接启动打地鼠游戏
- 	--main.RunMoleGame()
+ 	main.RunMoleGame()
 
  	--Debug.Log(LuaBehaviour)
 end
