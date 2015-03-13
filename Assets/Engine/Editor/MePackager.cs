@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+﻿﻿using UnityEditor;
 using UnityEngine;
 using System.IO;
 using System.Text;
@@ -6,32 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class MePackager
-{
-    [MenuItem("Custom Editor/将不需依赖包的游戏物体打包成AssetsBundle")]
-    static void CreateAssetBunldesInDependencies()
-    {
-        //获取在Project视图中选择的所有游戏对象
-        Object[] SelectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
-        //遍历所有的游戏对象
-        foreach (Object obj in SelectedAsset) 
-        {
-            if (obj is GameObject)
-            {
-                if (BuildPipeline.BuildAssetBundle(obj, null, "Assets/StreamingAssets/" + obj.name + ".m", BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle, BuildTarget.Android)) 
-                {
-                    Debug.Log(obj.name + ".m " + "资源打包成功");
-                } 
-                else 
-                {
-                    Debug.Log(obj.name + ".m " + "资源打包失败");
-                }
-            }
-        }
-        //刷新编辑器
-        AssetDatabase.Refresh();
-    }
+{ 
     //生成的资源包的扩展名
-    public static string assetbundle_extension = "*.m";
+    public static string assetbundle_extension = "*.ab";
     [MenuItem("ME Tools/1.清理缓存,让一切重新开始")]
     static void CleanCacheFiles()
     {
