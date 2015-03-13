@@ -7,10 +7,31 @@ using System.Collections.Generic;
 
 public class MePackager
 {
+    [MenuItem("Custom Editor/将不需依赖包的游戏物体打包成AssetsBundle")]
+    static void CreateAssetBunldesInDependencies()
+    {
+        //获取在Project视图中选择的所有游戏对象
+        Object[] SelectedAsset = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
+        //遍历所有的游戏对象
+        foreach (Object obj in SelectedAsset) 
+        {
+            if (obj is GameObject)
+            {
+                if (BuildPipeline.BuildAssetBundle(obj, null, "Assets/StreamingAssets/" + obj.name + ".m", BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.DeterministicAssetBundle, BuildTarget.Android)) 
+                {
+                    Debug.Log(obj.name + ".m " + "资源打包成功");
+                } 
+                else 
+                {
+                    Debug.Log(obj.name + ".m " + "资源打包失败");
+                }
+            }
+        }
+        //刷新编辑器
+        AssetDatabase.Refresh();
+    }
     //生成的资源包的扩展名
-    public static string assetbundle_extension = "*.ab";
-
-
+    public static string assetbundle_extension = "*.m";
     [MenuItem("ME Tools/1.清理缓存,让一切重新开始")]
     static void CleanCacheFiles()
     {
@@ -33,11 +54,13 @@ public class MePackager
         string toPath = Application.dataPath + "/Data/asset/" + target.ToString().ToLower() + "/";
 
         //清空
+        /*
         DirectoryInfo toDirInfo = new DirectoryInfo(Application.dataPath + "/Data/asset/");
         if (toDirInfo.Exists)
         {
             toDirInfo.Delete(true);
         }
+         * */
         if (!Directory.Exists(toPath)) Directory.CreateDirectory(toPath);
 
         DirectoryInfo mDirInfo = new DirectoryInfo(mPath);
@@ -152,17 +175,17 @@ public class MePackager
         }
 
         //以下是进行lua脚本的加密,（加密:windows版l已OK（luac批处理）,ios的请高手提交代码; 解密:待完善,即让lua requrie函数使用c#函数来执行解密）
-        /*
+     /*   
           //luac 
          runLuac();
-  */
+
           //rc4 
         foreach (FileInfo luaFile in toDirInfo.GetFiles("*.lua", SearchOption.AllDirectories))
          {
              string allPath = luaFile.FullName;
              EncryptFile(allPath, allPath); //进行RC4
          }   
-       
+      */   
     }
 
     //luac for windows
@@ -250,9 +273,9 @@ public class MePackager
         target = BuildTarget.StandaloneWindows;
 #elif UNITY_IPHONE
 		Debug.Log ("build for ios");
-			target = BuildTarget.iPhone;
+			target = BuildTarget.iOS;
 #elif UNITY_ANDROID
-			Debug.Log ("build for android");
+        Debug.Log ("build for android");
 			target = BuildTarget.Android;
 #endif
         return target;

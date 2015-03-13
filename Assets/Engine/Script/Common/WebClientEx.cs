@@ -23,7 +23,7 @@ public class WebClientEx : WebClient
 
     public WebClientEx()
     {
-        this._timeout = 3000;
+        this._timeout = 6500;
     }
 
     public WebClientEx(int timeout)

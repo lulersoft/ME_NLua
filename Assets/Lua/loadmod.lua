@@ -9,7 +9,7 @@ function loadmod.Start()
 	this=loadmod.this	
 
 	local name="gui.ab"
-	this:LoadBundle(name,loadmod.onLoadComplete)
+	API.LoadBundle(name,loadmod.onLoadComplete)
 end
 
 

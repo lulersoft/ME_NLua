@@ -106,7 +106,7 @@ end
 
 function main.StartGame()
 	--切换为主线程执行
-	this:AddMission(main.RunMoleGame,nil)
+	API.AddMission(main.RunMoleGame,nil)
 end
 
 
@@ -114,7 +114,7 @@ end
 --下载进度回调
 function main.OnDownloadProgressChanged(sender,e)
 	--切换为主线程执行
-	this:AddMission(main.OnDownLoadProgress,e)
+	API.AddMission(main.OnDownLoadProgress,e)
 end
 function main.OnDownLoadProgress(e)
 	local str=string.format("downloaded %s of %s bytes. %s complete...",    
@@ -126,7 +126,7 @@ end
 --下载完成
 function main.OnDownloadCompleted(sender,e)
 	--切换为主线程执行
-	this:AddMission(main.OnDownData,e)
+	API.AddMission(main.OnDownData,e)
 end
 function main.OnDownData(e)
 	if e.Error then

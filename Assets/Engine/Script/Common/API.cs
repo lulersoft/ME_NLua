@@ -1,13 +1,14 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using ICSharpCode.SharpZipLib.Zip;
 using System.IO;
 using System.ComponentModel;
-using NLua;
 using System.Security.Cryptography;
+using NLua;
 /// <summary>
 /// 后面将制作菜单用来搜索所有用得到的delegate Type，自动生成 N lua delegate.
 /// </summary>
@@ -77,8 +78,7 @@ public class LuaBinder{
 
 }
 public class API  {
-
-    public static Hashtable BundleTable=new Hashtable();
+        
     private static Lua lua;
 
     //资源加密解密常量定义
@@ -86,7 +86,7 @@ public class API  {
     public static string Encrypt_Key = "this is source encryption key for me game frame,please custom this key string";
 
     //是否启用调试
-    public static bool Debug = true;    
+    public static bool usingDebug = true;    
 
     public static Lua env
     {
@@ -105,22 +105,73 @@ public class API  {
         }
     }
 
+    static string _assetRoot = "";
+
     public static string AssetRoot
     {
         get
         {
-            return Application.persistentDataPath + "/";
+            if (_assetRoot != "")
+            {
+                return _assetRoot;
+            }
+            else
+            {
+                return Application.persistentDataPath + "/";
+            }
+        }
+        set
+        {
+            _assetRoot = value;
         }
     }
-    #region
+
+    static string _assetPath="";
+    public static string AssetPath
+    {
+        get
+        {
+            if (_assetPath != "")
+            {
+                return _assetPath;
+            }else{
+                 return API.AssetRoot + "asset/" + API.GetTargetPlatform + "/";
+            }
+        }
+        set{
+            _assetPath = value;
+        }
+    }
+
+    static private string _GetTargetPlatform;
+    //资源目标平台
+    static public string GetTargetPlatform
+    {
+        get
+        {
+            if (_GetTargetPlatform != null)
+                return _GetTargetPlatform;
+            string target = "webplayer";
+#if UNITY_STANDALONE
+            target = "standalonewindows";
+#elif UNITY_IPHONE
+            target = "ios";
+#elif UNITY_ANDROID
+            target = "android";
+#endif
+            return target;
+        }
+    }
+
+    #region DebugTools
     public static void Log(object msg)
     {
-        if(Debug)
+        if (usingDebug)
         {
             DebugTools.log += msg.ToString()+"\n\r";
             if(DebugTools.obj==null)
             {
-                DebugTools.obj = new GameObject("DebugTools");
+                DebugTools.obj = new GameObject("~DebugTools");
                 DebugTools.obj.AddComponent<DebugTools>();
             }
         }
@@ -141,12 +192,12 @@ public class API  {
 	// local carm=GameObject("carm")	
 	// API.AddComponent(carm,Camera)
 
-    public static object AddComponent(GameObject obj, ProxyType t)
+    public static UnityEngine.Component AddComponent(GameObject obj, ProxyType t)
     {        
         return obj.AddComponent(t.UnderlyingSystemType);
     }
 
-    public static object AddMissComponent(GameObject obj, ProxyType t)
+    public static UnityEngine.Component AddMissComponent(GameObject obj, ProxyType t)
     {
         Type _t = t.UnderlyingSystemType;
         string classname = _t.ToString();
@@ -293,7 +344,7 @@ public class API  {
     {
         if(LuaMeTimer.obj==null)
         {
-            LuaMeTimer.obj = new GameObject("LuaMeTimer");
+            LuaMeTimer.obj = new GameObject("~LuaMeTimer");
             LuaMeTimer.obj.AddComponent<LuaMeTimer>();
         }
         MeTimer timer = new MeTimer();
@@ -489,4 +540,84 @@ public class API  {
     {
         return Physics.Raycast(ray, out hit, distance, layerMask);
     }
+    //加载 AssetBundle
+    public static void LoadBundle(string fname, Callback<string, AssetBundle> handler)
+    {
+        if (MeLoadBundle.obj == null)
+        {
+            MeLoadBundle.obj = new GameObject("~MeLoadBundle");
+            MeLoadBundle.obj.AddComponent<MeLoadBundle>();
+        }
+        MeLoadBundle.self.LoadBundle(fname, handler);
+    }
+    //释放所有AssetBundle
+    public static void UnLoadAllBundle()
+    {
+        if (MeLoadBundle.self != null)
+        {
+            MeLoadBundle.self.UnLoadAllBundle();
+        }
+    }
+    //释放某AssetBundle
+    public static void UnLoadBundle(AssetBundle bundle)
+    {
+        if (MeLoadBundle.self != null)
+        {
+            MeLoadBundle.self.UnLoadBundle(bundle);
+        }
+    }
+    //释放某AssetBundle
+    public static void UnLoadBundle(string key)
+    {
+        if (MeLoadBundle.self != null)
+        {
+            MeLoadBundle.self.UnLoadBundle(key);
+        }
+    }
+    //回归主线程
+    public static void AddMission(LuaFunction func, params object[] args)
+    {
+        if (MeMission.obj == null)
+        {
+            MeMission.obj = new GameObject("~MeMission");
+            MeMission.self = MeMission.obj.AddComponent<MeMission>();
+        }
+
+        MeMission.self.AddMission(new MissionPack(func, args));
+    }
+
+    #region 消息中心
+    //添加消息侦听
+    public static void AddListener(string eventType, Callback handler)
+    {
+        Messenger.AddListener(eventType, handler);
+    }
+
+    public static void AddListener2(string eventType, Callback<object> handler)
+    {
+        Messenger.AddListener<object>(eventType, handler);
+    }
+
+    //移除一事件侦听
+    public static void RemoveListener(string eventType, Callback handler)
+    {
+        Messenger.RemoveListener(eventType, handler);
+    }
+    public static void RemoveListener2(string eventType, Callback<object> handler)
+    {
+        Messenger.RemoveListener<object>(eventType, handler);
+    }
+
+    //触发消息广播
+    public static void Broadcast(string eventType)
+    {
+        Messenger.Broadcast(eventType);
+    }
+
+    public static void Broadcast(string eventType, object args)
+    {
+        Messenger.Broadcast<object>(eventType, args);
+    }
+    #endregion   
+
 }

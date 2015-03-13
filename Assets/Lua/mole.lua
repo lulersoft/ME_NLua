@@ -30,11 +30,9 @@ function mole.Start()
 	image=gameObject:GetComponent("Image")
     animator=gameObject:GetComponent("Animator")
 
-	local _text2d=MoleAtlas:LoadAsset("Assets/Atlas/MoleAtlas/Mole04.png")
-	sprite4=Sprite.Create(_text2d,Rect(0,0,56,79),Vector2(0.5,0.5))
+	sprite4=MoleAtlas:LoadAsset("Assets/Atlas/MoleAtlas/Mole04.png")	
 
 	EventListener.Get(gameObject).onClick=mole.onClick
-
 end
 
 function mole.reset()
@@ -63,11 +61,11 @@ function  mole.onClick(go)
 	animator.enabled=false
 
 	--改变sprite
-	image.sprite=sprite4
+	image.sprite=Sprite.Create(sprite4,Rect(0,0,56,79),Vector2(0.5,0.5))
 	image:SetNativeSize()
 
 	--发消息通知全世界,俺打中一头鼹鼠了。
-	this:Broadcast("hit on one mole",gameObject)	
+	API.Broadcast("hit on one mole",gameObject)	
 	
 end
 
@@ -101,7 +99,7 @@ function mole.onIncomplete()
 	--如果活着缩回洞里
 	if mole.live==1 then
 		--发消息通知全世界,玩家失去一点血。
-	    this:Broadcast("missing one mole",gameObject)
+	    API.Broadcast("missing one mole",gameObject)
 		
 	end
 

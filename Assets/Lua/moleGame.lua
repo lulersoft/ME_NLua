@@ -42,14 +42,14 @@ function game.Run()
 	math.randomseed(Time.realtimeSinceStartup)
 
 	--添加侦听（击中鼹鼠）
-	this:AddListener2("hit on one mole",game.onHitMole)
+	API.AddListener2("hit on one mole",game.onHitMole)
 
 	--添加侦听 跑了一只鼹鼠
-	this:AddListener2("missing one mole",game.onMissMole)
+	API.AddListener2("missing one mole",game.onMissMole)
 
-	--加载共享的图集
-	local name = "moleatlas.ab"
-	this:LoadBundle(name,game.onLoadComplete)
+	--加载图集
+	local name = "moleatlas.m"
+	API.LoadBundle(name,game.onLoadComplete)
 end
 
 function game.onHitMole(go)
@@ -85,29 +85,22 @@ end
 
 
 --退出系统
-local touchTime=0
+game.touchTime=0
 function game.onKeyBackDown()
-	
-	if Input.GetKeyUp(KeyCode.Escape) then
-		
-		if Time.realtimeSinceStartup-touchTime >=2 then	
-			API.Log("再按一次退出")
-			touchTime=Time.realtimeSinceStartup			
+	if Input.GetKeyUp(KeyCode.Escape) then		
+		if Time.realtimeSinceStartup-game.touchTime >=2000 then	
+			--Debug.Log(Time.realtimeSinceStartup-touchTime)
+			game.touchTime=Time.realtimeSinceStartup
 		else
 			Application.Quit()
-		end	
-			
+		end		
 	end
-
 end
 
 function game.onLoadComplete(uri,bundle)
 
-	API.Log(uri)
-
-	if uri=="gui.ab" then
-
-		local prefab = bundle:LoadAsset("Assets/Builds/GUI/Prefab/GUI.prefab")
+	if uri=="gui.m" then
+		local prefab = bundle:LoadAsset("Assets/Builds/Demo/Prefab/GUI.prefab")
 		local guiGo=GameObject.Instantiate(prefab)
 		guiGo.name="GUI"
 
@@ -150,19 +143,19 @@ function game.onLoadComplete(uri,bundle)
 		versionText.text="version:"..tostring(version)		
 		
 		--加载鼹鼠prefab
-		local name = "molepre.ab"
-		this:LoadBundle(name,game.onLoadComplete) 		
+		local name = "molepre.m"
+		API.LoadBundle(name,game.onLoadComplete)  
 
-	elseif uri=="moleatlas.ab" then
+	elseif uri=="moleatlas.m" then
 		MoleAtlas = bundle
 
-		--加载鼹鼠sprite Altas
-		local name = "gui.ab"
-		this:LoadBundle(name,game.onLoadComplete)  
+		--加载ui
+		local name = "gui.m"
+		API.LoadBundle(name,game.onLoadComplete)            
 
- 	elseif uri=="molepre.ab" then
- 		local name="Assets/Builds/GUI/Prefab/molePre.prefab"
- 		local prefab = bundle:LoadAsset(name)--bundle.mainAsset--bundle:Load(name) 
+ 	elseif uri=="molepre.m" then
+ 		local name="molepre"
+ 		local prefab = bundle:LoadAsset(name) 
 
  		local idx=0
  		local x=0
@@ -184,15 +177,16 @@ function game.onLoadComplete(uri,bundle)
  			end 
 
  			local moleGo=GameObject.Instantiate(prefab)
+
+ 			Debug.Log(moleGo)
     		moleGo.name = name..tostring(i)
         	moleGo.layer = LayerMask.NameToLayer("UI")
         	--moleGo.transform.parent = uibgArr[idx] 这个方法在ugui已经过期，使用SetParent()替换
         	moleGo.transform:SetParent(uibgArr[idx])
         	moleGo.transform.localScale = Vector3.one
-        	moleGo.transform.localPosition = Vector3(x,y,0)   	
-        
-        	--local lb=moleGo:AddComponent("LuaBehaviour") --这个方法在unity 5.x已经过期
-        	local lb = API.AddComponent(moleGo,"LuaBehaviour")
+        	moleGo.transform.localPosition = Vector3(x,y,0)
+        	
+        	local lb=API.AddComponent(moleGo,"LuaBehaviour")        
         	lb:SetEnv("MoleAtlas",MoleAtlas,true)
         	lb:DoFile("mole")
 
@@ -235,10 +229,10 @@ function game.Update()
 end
 
 
-function game.onTimer(source)	
+function game.onTimer(source,e)	
 	--切换为主线程执行
 	if gameOver==false then
-		game.moleComeOut()    
+		API.AddMission(game.moleComeOut,nil)     
 	end
 end
 

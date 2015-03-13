@@ -14,12 +14,12 @@ function demo.Start()
 
 	--添加个照相机
 	local carm=GameObject("carm")	
-	API.AddComponent(carm,Camera)
+	API.AddMissComponent(carm,Camera)
 	
 	carm.transform.localPosition=Vector3(9,3,-17)
 
 	--来一束光照亮测试场景
-	local light = API.AddComponent(carm,Light)
+	local light = API.AddMissComponent(carm,Light)
 	light.type=LightType.Directional
 
 	--demo.test1()
@@ -40,7 +40,7 @@ function demo.createCube(ii)
 	cube.name=tostring(ii)
 	cube.transform.position = Vector3(10 + r * math.cos((ii + 10) * Mathf.Deg2Rad), 10 + r * math.sin((ii + 10) * Mathf.Deg2Rad), 10 + r * math.sin((ii + 10) * Mathf.Deg2Rad))	
 
-	local lb = API.AddComponent(cube,"LuaBehaviour")
+	local lb = API.AddComponent(cube,LuaBehaviour)
 	lb:DoFile("testui2")
 end
 
