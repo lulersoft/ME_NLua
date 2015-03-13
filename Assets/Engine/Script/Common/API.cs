@@ -100,6 +100,8 @@ public class API  {
                 lua["package.path"] = lua["package.path"] + ";" + API.AssetRoot + "lua/?.lua;";
 
 				LuaBinder.RegisterNLuaDelegate (lua);
+
+                InitApp();
             }
             return lua;
         }
@@ -160,6 +162,16 @@ public class API  {
             target = "android";
 #endif
             return target;
+        }
+    }
+
+
+    public static void InitApp()
+    {
+        if (MeMission.obj == null)
+        {
+            MeMission.obj = new GameObject("~MeMission");
+            MeMission.obj.AddComponent<MeMission>();
         }
     }
 
@@ -577,12 +589,6 @@ public class API  {
     //回归主线程
     public static void AddMission(LuaFunction func, params object[] args)
     {
-        if (MeMission.obj == null)
-        {
-            MeMission.obj = new GameObject("~MeMission");
-            MeMission.self = MeMission.obj.AddComponent<MeMission>();
-        }
-
         MeMission.self.AddMission(new MissionPack(func, args));
     }
 
