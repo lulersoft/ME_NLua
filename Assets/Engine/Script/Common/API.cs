@@ -149,12 +149,14 @@ public class API  {
     public static object AddMissComponent(GameObject obj, ProxyType t)
     {
         Type _t = t.UnderlyingSystemType;
-        object _out = obj.GetComponent(_t.ToString());
-       
-        if (_out == null)
-        {
-            _out = obj.AddComponent(_t);
-        }        
+        string classname = _t.ToString();
+        int idx = classname.LastIndexOf(".");
+        classname = classname.Substring(idx + 1, classname.Length - idx - 1);      
+        UnityEngine.Component _out = obj.GetComponent(classname);
+         if (null == _out)
+        {          
+            _out = obj.AddComponent(_t);          
+        }               
         return _out;
     }
 
