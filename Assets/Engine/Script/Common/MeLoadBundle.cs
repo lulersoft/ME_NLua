@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿﻿using UnityEngine;
 using System.Collections;
 using NLua;
 
@@ -116,5 +116,10 @@ public class MeLoadBundle : MonoBehaviour {
     {
         string source = (string.IsNullOrEmpty(e.Source)) ? "<no source>" : e.Source.Substring(0, e.Source.Length - 2);
         return string.Format("{0}\nLua (at {2})", e.Message, string.Empty, source);
+    }
+
+    protected void OnDestroy()   
+    {
+        UnLoadAllBundle(); 
     }
 }
