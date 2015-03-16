@@ -11,7 +11,7 @@ public class Activity : LuaBehaviour
 {  
 
     protected bool isDebug = false;
-    protected string _name = "game.lua";
+    protected string _name = "main.lua"; 
 
     protected void Awake()
     {       

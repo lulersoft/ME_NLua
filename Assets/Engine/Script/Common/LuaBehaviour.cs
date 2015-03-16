@@ -53,7 +53,7 @@ public class LuaBehaviour : MonoBehaviour
         Destroy(gameObject);
     }
     protected void OnDestroy()
-    {       
+    {    
 
         CallMethod("OnDestroy");
 

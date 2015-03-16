@@ -13,72 +13,75 @@ using NLua;
 /// 后面将制作菜单用来搜索所有用得到的delegate Type，自动生成 N lua delegate.
 /// </summary>
 [AttributeUsage(AttributeTargets.Delegate)]
-public class NLuaDelegate : System.Attribute 
+public class NLuaDelegate : System.Attribute
 {
-	public NLuaDelegate() 
-	{
-		//
-	}
-} 
+    public NLuaDelegate()
+    {
+        //
+    }
+}
 class CallbackLuaFunction : NLua.Method.LuaDelegate
 {
-	void CallFunction ()
-	{
-		object [] args = new object [] { };
-		object [] inArgs = new object [] {};
-		int [] outArgs = new int [] { };
-		base.CallFunction (args, inArgs, outArgs);
-	}
+    void CallFunction()
+    {
+        object[] args = new object[] { };
+        object[] inArgs = new object[] { };
+        int[] outArgs = new int[] { };
+        base.CallFunction(args, inArgs, outArgs);
+    }
 }
 class CallbackLuaFunction<T> : NLua.Method.LuaDelegate
 {
-	void CallFunction (T arg1)
-	{
-		object [] args = new object [] { arg1 };
-		object [] inArgs = new object [] {arg1 };
-		int [] outArgs = new int [] { };
-		base.CallFunction (args, inArgs, outArgs);
-	}
+    void CallFunction(T arg1)
+    {
+        object[] args = new object[] { arg1 };
+        object[] inArgs = new object[] { arg1 };
+        int[] outArgs = new int[] { };
+        base.CallFunction(args, inArgs, outArgs);
+    }
 }
-class CallbackLuaFunction<T,U> : NLua.Method.LuaDelegate
+class CallbackLuaFunction<T, U> : NLua.Method.LuaDelegate
 {
-	void CallFunction ( T arg1,U arg2)
-	{
-		object [] args = new object [] { arg1,arg2 };
-		object [] inArgs = new object [] {arg1,arg2 };
-		int [] outArgs = new int [] { };
-		base.CallFunction (args, inArgs, outArgs);
-	}
+    void CallFunction(T arg1, U arg2)
+    {
+        object[] args = new object[] { arg1, arg2 };
+        object[] inArgs = new object[] { arg1, arg2 };
+        int[] outArgs = new int[] { };
+        base.CallFunction(args, inArgs, outArgs);
+    }
 }
-class CallbackLuaFunction<T,U,V> : NLua.Method.LuaDelegate
+class CallbackLuaFunction<T, U, V> : NLua.Method.LuaDelegate
 {
-	void CallFunction (T arg1,U arg2,V arg3)
-	{
-		object [] args = new object [] { arg1,arg2 ,arg3};
-		object [] inArgs = new object [] {arg1,arg2 ,arg3};
-		int [] outArgs = new int [] { };
-		base.CallFunction (args, inArgs, outArgs);
-	}
+    void CallFunction(T arg1, U arg2, V arg3)
+    {
+        object[] args = new object[] { arg1, arg2, arg3 };
+        object[] inArgs = new object[] { arg1, arg2, arg3 };
+        int[] outArgs = new int[] { };
+        base.CallFunction(args, inArgs, outArgs);
+    }
 }
 
-public class LuaBinder{
-	public static void RegisterNLuaDelegate(Lua context){
-		//主要针对ios，aot下不能有动态模板映射,当kera模式在ios发布平台的时候
-		context.RegisterLuaDelegateType (typeof (EventListener.VoidDelegate), typeof (CallbackLuaFunction<GameObject>));
-		context.RegisterLuaDelegateType (typeof (Action<object>), typeof (CallbackLuaFunction<object>));
-		context.RegisterLuaDelegateType (typeof (Action), typeof (CallbackLuaFunction));
-		context.RegisterLuaDelegateType (typeof (Callback), typeof (CallbackLuaFunction));
-		context.RegisterLuaDelegateType (typeof (Callback<object>), typeof (CallbackLuaFunction<object>));
-		context.RegisterLuaDelegateType (typeof (Callback<string,AssetBundle>), typeof (CallbackLuaFunction<string,AssetBundle>));
-		context.RegisterLuaDelegateType (typeof (DownloadProgressChangedEventHandler), typeof (CallbackLuaFunction<object, DownloadProgressChangedEventArgs>));
-		context.RegisterLuaDelegateType (typeof (AsyncCompletedEventHandler), typeof (CallbackLuaFunction<object, AsyncCompletedEventArgs>));
-		context.RegisterLuaDelegateType (typeof (UploadProgressChangedEventHandler), typeof (CallbackLuaFunction<object, UploadProgressChangedEventArgs>));
-		context.RegisterLuaDelegateType (typeof (UploadStringCompletedEventHandler), typeof (CallbackLuaFunction<object, UploadStringCompletedEventArgs>));
-	}
+public class LuaBinder
+{
+    public static void RegisterNLuaDelegate(Lua context)
+    {
+        //主要针对ios，aot下不能有动态模板映射,当kera模式在ios发布平台的时候
+        context.RegisterLuaDelegateType(typeof(EventListener.VoidDelegate), typeof(CallbackLuaFunction<GameObject>));
+        context.RegisterLuaDelegateType(typeof(Action<object>), typeof(CallbackLuaFunction<object>));
+        context.RegisterLuaDelegateType(typeof(Action), typeof(CallbackLuaFunction));
+        context.RegisterLuaDelegateType(typeof(Callback), typeof(CallbackLuaFunction));
+        context.RegisterLuaDelegateType(typeof(Callback<object>), typeof(CallbackLuaFunction<object>));
+        context.RegisterLuaDelegateType(typeof(Callback<string, AssetBundle>), typeof(CallbackLuaFunction<string, AssetBundle>));
+        context.RegisterLuaDelegateType(typeof(DownloadProgressChangedEventHandler), typeof(CallbackLuaFunction<object, DownloadProgressChangedEventArgs>));
+        context.RegisterLuaDelegateType(typeof(AsyncCompletedEventHandler), typeof(CallbackLuaFunction<object, AsyncCompletedEventArgs>));
+        context.RegisterLuaDelegateType(typeof(UploadProgressChangedEventHandler), typeof(CallbackLuaFunction<object, UploadProgressChangedEventArgs>));
+        context.RegisterLuaDelegateType(typeof(UploadStringCompletedEventHandler), typeof(CallbackLuaFunction<object, UploadStringCompletedEventArgs>));
+    }
 
 }
-public class API  {
-        
+public class API
+{
+
     private static Lua lua;
 
     //资源加密解密常量定义
@@ -86,7 +89,7 @@ public class API  {
     public static string Encrypt_Key = "this is source encryption key for me game frame,please custom this key string";
 
     //是否启用调试
-    public static bool usingDebug = true;    
+    public static bool usingDebug = true;
 
     public static Lua env
     {
@@ -99,7 +102,7 @@ public class API  {
                 //设置lua脚本文件查找路径
                 lua["package.path"] = lua["package.path"] + ";" + API.AssetRoot + "lua/?.lua;";
 
-				LuaBinder.RegisterNLuaDelegate (lua);
+                LuaBinder.RegisterNLuaDelegate(lua);
 
                 InitApp();
             }
@@ -128,7 +131,7 @@ public class API  {
         }
     }
 
-    static string _assetPath="";
+    static string _assetPath = "";
     public static string AssetPath
     {
         get
@@ -136,11 +139,14 @@ public class API  {
             if (_assetPath != "")
             {
                 return _assetPath;
-            }else{
-                 return API.AssetRoot + "asset/" + API.GetTargetPlatform + "/";
+            }
+            else
+            {
+                return API.AssetRoot + "asset/" + API.GetTargetPlatform + "/";
             }
         }
-        set{
+        set
+        {
             _assetPath = value;
         }
     }
@@ -180,8 +186,8 @@ public class API  {
     {
         if (usingDebug)
         {
-            DebugTools.log += msg.ToString()+"\n\r";
-            if(DebugTools.obj==null)
+            DebugTools.log += msg.ToString() + "\n\r";
+            if (DebugTools.obj == null)
             {
                 DebugTools.obj = new GameObject("~DebugTools");
                 DebugTools.obj.AddComponent<DebugTools>();
@@ -201,11 +207,11 @@ public class API  {
     #endregion
 
     //	--lua中添加个照相机例子：
-	// local carm=GameObject("carm")	
-	// API.AddComponent(carm,Camera)
+    // local carm=GameObject("carm")	
+    // API.AddComponent(carm,Camera)
 
     public static UnityEngine.Component AddComponent(GameObject obj, ProxyType t)
-    {        
+    {
         return obj.AddComponent(t.UnderlyingSystemType);
     }
 
@@ -214,16 +220,16 @@ public class API  {
         Type _t = t.UnderlyingSystemType;
         string classname = _t.ToString();
         int idx = classname.LastIndexOf(".");
-        classname = classname.Substring(idx + 1, classname.Length - idx - 1);      
+        classname = classname.Substring(idx + 1, classname.Length - idx - 1);
         UnityEngine.Component _out = obj.GetComponent(classname);
-         if (null == _out)
-        {          
-            _out = obj.AddComponent(_t);          
-        }               
+        if (null == _out)
+        {
+            _out = obj.AddComponent(_t);
+        }
         return _out;
     }
 
-   public static object AddComponent(GameObject obj,string classname)
+    public static object AddComponent(GameObject obj, string classname)
     {
         Type t = Type.GetType(classname);
         return obj.AddComponent(t);
@@ -232,7 +238,7 @@ public class API  {
     {
         Type t = Type.GetType(classname);
         object _out = obj.GetComponent(t);
-        if(_out==null)
+        if (_out == null)
         {
             _out = obj.AddComponent(t);
         }
@@ -305,16 +311,21 @@ public class API  {
         }
     }
 
-	//异步HTTP
-	public static WebClientEx SendRequest(string url, string data, UploadProgressChangedEventHandler progressHander, UploadStringCompletedEventHandler completeHandler)
+    public static WebClientEx SendRequest(string url, string data, LuaFunction progressHander, LuaFunction completeHandler)
     {
         WebClientEx webClient = new WebClientEx();
         webClient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";  //采取POST方式必须加的header，如果改为GET方式的话就去掉这句话即可  
         webClient.Encoding = System.Text.UTF8Encoding.UTF8;
         System.Uri uri = new System.Uri(url);
 
-		webClient.UploadProgressChanged += progressHander;
-		webClient.UploadStringCompleted += completeHandler;
+        webClient.UploadProgressChanged += (object sender, UploadProgressChangedEventArgs e) =>
+        {
+            progressHander.Call(sender, new MeUploadProgressChangedEventHandler(e.BytesReceived, e.BytesSent, e.TotalBytesToReceive, e.TotalBytesToSend));
+        };
+        webClient.UploadStringCompleted += (object sender, UploadStringCompletedEventArgs e) =>
+        {
+            completeHandler.Call(sender, new MeUploadStringCompletedEventHandler(e.Error, e.Cancelled, e.Result));
+        };
 
         try
         {
@@ -324,16 +335,22 @@ public class API  {
         {
             API.Log("Post err " + e.Message);
         }
-         //返回client ，可用 client.CancelAsync(); 中断下载
+        //返回client ，可用 client.CancelAsync(); 中断下载
         return webClient;
     }
- 
+
     //异步下载
-	public static WebClient DownLoad(string src, string SavePath, DownloadProgressChangedEventHandler progressHander, AsyncCompletedEventHandler completeHander)
+    public static WebClient DownLoad(string src, string SavePath, LuaFunction progressHander, LuaFunction completeHander)
     {
         WebClient client = new WebClient();
-		client.DownloadProgressChanged += progressHander;
-		client.DownloadFileCompleted += completeHander;
+        client.DownloadProgressChanged += (object sender, DownloadProgressChangedEventArgs e) =>
+        {
+            progressHander.Call(sender, new MeDownloadProgressChangedEventHandler(e.BytesReceived, e.TotalBytesToReceive));
+        };
+        client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
+        {
+            completeHander.Call(sender, new MeAsyncCompletedEventArgs(e.Error, e.Cancelled, e.UserState));
+        };
         try
         {
             client.DownloadFileAsync(new System.Uri(src), SavePath);
@@ -347,14 +364,14 @@ public class API  {
         return client;
     }
 
-     //时钟
+    //时钟
     public static MeTimer AddTimer(float interval, Callback<MeTimer> onTimerHander)
     {
         return AddTimer(interval, 0, onTimerHander);
     }
     public static MeTimer AddTimer(float interval, int loop, Callback<MeTimer> onTimerHander)
     {
-        if(LuaMeTimer.obj==null)
+        if (LuaMeTimer.obj == null)
         {
             LuaMeTimer.obj = new GameObject("~LuaMeTimer");
             LuaMeTimer.obj.AddComponent<LuaMeTimer>();
@@ -368,12 +385,12 @@ public class API  {
 
         return timer;
     }
-    
+
     public static void KillTimer(MeTimer timer)
     {
         if (timer != null)
         {
-            timer.close=true;
+            timer.close = true;
         }
     }
 
@@ -541,7 +558,7 @@ public class API  {
     {
         Stream stream = new MemoryStream(bytes);
         return stream;
-    } 
+    }
 
     //发射线
     public static object Raycast(Ray ray, out RaycastHit hit)
@@ -624,6 +641,64 @@ public class API  {
     {
         Messenger.Broadcast<object>(eventType, args);
     }
-    #endregion   
+    #endregion
 
 }
+
+
+public class MeUploadStringCompletedEventHandler
+{
+    public Exception Error;
+    public bool Cancelled;
+    public string Result;
+
+    public MeUploadStringCompletedEventHandler(Exception Error, bool Cancelled, string Result)
+    {
+        this.Error = Error;
+        this.Cancelled = Cancelled;
+        this.Result = Result;
+    }
+}
+
+public class MeUploadProgressChangedEventHandler
+{
+    public long BytesReceived { get; set; }
+    public long BytesSent { get; set; }
+    public long TotalBytesToReceive { get; set; }
+    public long TotalBytesToSend { get; set; }
+
+    public MeUploadProgressChangedEventHandler(long BytesReceived, long BytesSent, long TotalBytesToReceive, long TotalBytesToSend)
+    {
+        this.BytesReceived = BytesReceived;
+        this.BytesSent = BytesSent;
+        this.TotalBytesToReceive = TotalBytesToReceive;
+        this.TotalBytesToSend = TotalBytesToSend;
+    }
+}
+
+public class MeDownloadProgressChangedEventHandler
+{
+    public long BytesReceived { get; set; }
+    public long TotalBytesToReceive { get; set; }
+    public MeDownloadProgressChangedEventHandler(long BytesReceived, long TotalBytesToReceive)
+    {
+        this.BytesReceived = BytesReceived;
+        this.TotalBytesToReceive = TotalBytesToReceive;
+    }
+}
+
+public class MeAsyncCompletedEventArgs
+{
+
+    public bool Cancelled { get; set; }
+    public Exception Error { get; set; }
+    public object UserState { get; set; }
+
+    public MeAsyncCompletedEventArgs(Exception Error, bool Cancelled, object UserState)
+    {
+        this.Error = Error;
+        this.Cancelled = Cancelled;
+        this.UserState = UserState;
+    }
+}
+
