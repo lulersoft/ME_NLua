@@ -569,15 +569,22 @@ public class API
     {
         return Physics.Raycast(ray, out hit, distance, layerMask);
     }
+
+
     //加载 AssetBundle
-    public static void LoadBundle(string fname, Callback<string, AssetBundle> handler)
+    public static void LoadBundle(string fname, Callback<string, AssetBundle, object> handler)
+    {
+        LoadBundle(fname, handler,null );
+    }
+
+    public static void LoadBundle(string fname, Callback<string, AssetBundle,object> handler,object arg)
     {
         if (MeLoadBundle.obj == null)
         {
             MeLoadBundle.obj = new GameObject("~MeLoadBundle");
             MeLoadBundle.obj.AddComponent<MeLoadBundle>();
         }
-        MeLoadBundle.self.LoadBundle(fname, handler);
+        MeLoadBundle.self.LoadBundle(fname, handler,arg);
     }
     //释放所有AssetBundle
     public static void UnLoadAllBundle()

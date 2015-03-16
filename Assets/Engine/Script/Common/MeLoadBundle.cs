@@ -14,16 +14,16 @@ public class MeLoadBundle : MonoBehaviour {
         DontDestroyOnLoad(gameObject);  //防止销毁自己
 	}
 
-    public void LoadBundle(string fname, Callback<string, AssetBundle> handler)
+    public void LoadBundle(string fname, Callback<string, AssetBundle,object> handler,object arg)
     {
         if (BundleTable.ContainsKey(fname))
         {
             AssetBundle bundle = BundleTable[fname] as AssetBundle;
-            if (handler != null) handler(name, bundle);
+            if (handler != null) handler(name, bundle,arg);
         }
         else
         {
-            StartCoroutine(onLoadBundle(fname, handler));
+            StartCoroutine(onLoadBundle(fname, handler,arg));
         }
     }
 
@@ -68,7 +68,7 @@ public class MeLoadBundle : MonoBehaviour {
         }
     }
 
-    protected IEnumerator onLoadBundle(string name, Callback<string, AssetBundle> handler)
+    protected IEnumerator onLoadBundle(string name, Callback<string, AssetBundle,object> handler,object arg)
     {
         string uri = "";
         if (name.LastIndexOf(".") != -1)
@@ -105,7 +105,7 @@ public class MeLoadBundle : MonoBehaviour {
         try
         {
             BundleTable[name] = bundle;
-            if (handler != null) handler(name, bundle);
+            if (handler != null) handler(name, bundle,arg);
         }
         catch (NLua.Exceptions.LuaException e)
         {
