@@ -11,6 +11,7 @@ public class MeLoadBundle : MonoBehaviour {
 	void Awake () {
         obj = this.gameObject;
         self = this;
+        DontDestroyOnLoad(gameObject);  //防止销毁自己
 	}
 
     public void LoadBundle(string fname, Callback<string, AssetBundle> handler)

@@ -5,11 +5,13 @@ using System.Collections.Generic;
 public class LuaMeTimer : MonoBehaviour {
 
     public static GameObject obj=null;
-
+    public static LuaMeTimer self = null;
     public static List<MeTimer> TimerList = new List<MeTimer>();
     
 	void Awake () {
 	    obj=this.gameObject;
+        self = this;
+        DontDestroyOnLoad(gameObject);  //防止销毁自己
 	}
     private float deltaTime = 0;
     private float nowTime = 0;

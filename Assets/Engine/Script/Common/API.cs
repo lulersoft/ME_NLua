@@ -604,7 +604,7 @@ public class API
         }
     }
     //回归主线程
-    public static void AddMission(LuaFunction func, params object[] args)
+    public static void AddMission(LuaFunction func, object args)
     {
         MeMission.self.AddMission(new MissionPack(func, args));
     }

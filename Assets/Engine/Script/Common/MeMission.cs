@@ -2,16 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using NLua;
-public class MeMission:MonoBehaviour {
+public class MeMission : MonoBehaviour
+{
 
     public static List<MissionPack> MissionList = new List<MissionPack>();
     public static GameObject obj = null;
     public static MeMission self = null;
 
-	void Awake () {
+    void Awake()
+    {
         obj = this.gameObject;
         self = this;
-	}
+        DontDestroyOnLoad(gameObject);  //防止销毁自己
+    }
 
     void Update()
     {
@@ -32,9 +35,9 @@ public class MeMission:MonoBehaviour {
 public struct MissionPack
 {
     public LuaFunction func;
-    public object[] args;
+    public object args;
 
-    public MissionPack(LuaFunction _func, params object[] _args)
+    public MissionPack(LuaFunction _func, object _args)
     {
         func = _func;
         args = _args;
