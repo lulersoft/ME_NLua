@@ -88,6 +88,9 @@ public class API
     public static int Encrypt_Len = 256;
     public static string Encrypt_Key = "this is source encryption key for me game frame,please custom this key string";
 
+    //生成的资源包的扩展名
+    public static string assetbundle_extension = ".ab";
+
     //是否启用调试
     public static bool usingDebug = true;
 
@@ -151,7 +154,7 @@ public class API
         }
     }
 
-    static private string _GetTargetPlatform;
+    static private string _GetTargetPlatform=null;
     //资源目标平台
     static public string GetTargetPlatform
     {
@@ -160,7 +163,7 @@ public class API
             if (_GetTargetPlatform != null)
                 return _GetTargetPlatform;
             string target = "webplayer";
-#if UNITY_STANDALONE
+#if UNITY_STANDALONE_WIN
             target = "standalonewindows";
 #elif UNITY_IPHONE
             target = "ios";
@@ -186,6 +189,7 @@ public class API
     {
         if (usingDebug)
         {
+            Debug.Log(msg);
             DebugTools.log += msg.ToString() + "\n\r";
             if (DebugTools.obj == null)
             {

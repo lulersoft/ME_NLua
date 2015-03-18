@@ -85,15 +85,15 @@ end
 
 
 --退出系统
-local touchTime=0
-function game.onKeyBackDown()	
+game.touchTime=0
+function game.onKeyBackDown()
 	if Input.GetKeyUp(KeyCode.Escape) then		
-		if Time.realtimeSinceStartup-touchTime >=2 then	
-			API.Log("再按一次退出")
-			touchTime=Time.realtimeSinceStartup			
+		if Time.realtimeSinceStartup-game.touchTime >=2000 then	
+			--Debug.Log(Time.realtimeSinceStartup-touchTime)
+			game.touchTime=Time.realtimeSinceStartup
 		else
 			Application.Quit()
-		end				
+		end		
 	end
 end
 

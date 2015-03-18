@@ -8,11 +8,52 @@ public class MeLoadBundle : MonoBehaviour {
 
     public static GameObject obj = null;
     public static MeLoadBundle self = null;
+
+    private AssetBundleManifest _manifest=null;
+
+    protected AssetBundleManifest manifest
+    {
+        get { 
+            if(_manifest==null)
+            {
+                string uri = API.AssetPath + "AssetBundles";
+                byte[] data = System.IO.File.ReadAllBytes(uri);
+                API.Encrypt(ref data);
+                AssetBundle assetbundle = AssetBundle.CreateFromMemoryImmediate(data);
+                manifest = assetbundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+            }
+            return _manifest;
+        }
+        set { _manifest = value; }
+    }
+    private string[] m_Variants = { };
+
 	void Awake () {
         obj = this.gameObject;
         self = this;
         DontDestroyOnLoad(gameObject);  //防止销毁自己
 	}
+    
+    AssetBundle LoadBundle(string fname)
+    {
+        string uri = fname;// getFullPathName(fname);
+
+        AssetBundle bundle = null;
+        if (!BundleTable.ContainsKey(uri))
+        {
+            byte[] data = null;
+            LoadDependencies(uri);
+            data = System.IO.File.ReadAllBytes(uri);
+            API.Encrypt(ref data);
+            bundle = AssetBundle.CreateFromMemoryImmediate(data); 
+            BundleTable.Add(fname, bundle);
+        }
+        else
+        {
+           bundle= BundleTable[fname] as AssetBundle;
+        }
+        return bundle;
+    }
 
     public void LoadBundle(string fname, Callback<string, AssetBundle,object> handler,object arg)
     {
@@ -68,24 +109,32 @@ public class MeLoadBundle : MonoBehaviour {
         }
     }
 
-    protected IEnumerator onLoadBundle(string name, Callback<string, AssetBundle,object> handler,object arg)
+    string getFullPathName(string fname)
     {
         string uri = "";
-        if (name.LastIndexOf(".") != -1)
+        if (fname.LastIndexOf(".") != -1)
         {
-            uri = "file:///" + API.AssetPath + name;
+            uri = "file:///" + API.AssetPath + fname;
         }
         else
         {
-            uri = "file:///" + API.AssetPath + name + ".ab";
+            uri = "file:///" + API.AssetPath + fname + ".ab";
         }
+        return uri;
+    }
+
+    protected IEnumerator onLoadBundle(string name, Callback<string, AssetBundle,object> handler,object arg)
+    {
+        string uri = getFullPathName(name);
+
+        //检测加载依赖
+        LoadDependencies(name);
 
         WWW www = new WWW(uri);
         yield return www;
         if (www.error != null)
         {
-            Debug.Log("Warning erro: " + uri);
-            Debug.Log("Warning erro: " + www.error);
+            API.Log("Warning erro: " + www.error);
             StopCoroutine("onLoadBundle");
             yield break;
         }
@@ -118,8 +167,67 @@ public class MeLoadBundle : MonoBehaviour {
         string source = (string.IsNullOrEmpty(e.Source)) ? "<no source>" : e.Source.Substring(0, e.Source.Length - 2);
         return string.Format("{0}\nLua (at {2})", e.Message, string.Empty, source);
     }
+
+    /// <summary>
+    /// 载入依赖
+    /// </summary>
+    /// <param name="name"></param>
+    void LoadDependencies(string name)
+    {
+        if (manifest == null)
+        {
+            Debug.LogError("manifest==null");
+            return;
+        }
+        // Get dependecies from the AssetBundleManifest object..
+        string[] dependencies = manifest.GetAllDependencies(name);
+        if (dependencies.Length == 0) return;
+
+        for (int i = 0; i < dependencies.Length; i++)
+            dependencies[i] = RemapVariantName(dependencies[i]);
+
+        // Record and load all dependencies.
+        for (int i = 0; i < dependencies.Length; i++)
+        {            
+            LoadBundle(dependencies[i]);
+        }
+    }
+
+    // Remaps the asset bundle name to the best fitting asset bundle variant.
+    string RemapVariantName(string assetBundleName)
+    {
+        string[] bundlesWithVariant = manifest.GetAllAssetBundlesWithVariant();
+
+        // If the asset bundle doesn't have variant, simply return.
+        if (System.Array.IndexOf(bundlesWithVariant, assetBundleName) < 0)
+            return assetBundleName;
+
+        string[] split = assetBundleName.Split('.');
+
+        int bestFit = int.MaxValue;
+        int bestFitIndex = -1;
+        // Loop all the assetBundles with variant to find the best fit variant assetBundle.
+        for (int i = 0; i < bundlesWithVariant.Length; i++)
+        {
+            string[] curSplit = bundlesWithVariant[i].Split('.');
+            if (curSplit[0] != split[0])
+                continue;
+
+            int found = System.Array.IndexOf(m_Variants, curSplit[1]);
+            if (found != -1 && found < bestFit)
+            {
+                bestFit = found;
+                bestFitIndex = i;
+            }
+        }
+        if (bestFitIndex != -1)
+            return bundlesWithVariant[bestFitIndex];
+        else
+            return assetBundleName;
+    }
+
     protected void OnDestroy()
     {
-        UnLoadAllBundle(); 
+        UnLoadAllBundle();       
     }
 }

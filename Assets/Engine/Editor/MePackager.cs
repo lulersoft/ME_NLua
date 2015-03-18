@@ -6,9 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class MePackager
-{ 
-    //生成的资源包的扩展名
-    public static string assetbundle_extension = "*.ab";
+{     
     [MenuItem("ME Tools/1.清理缓存,让一切重新开始")]
     static void CleanCacheFiles()
     {
@@ -50,8 +48,11 @@ public class MePackager
        
         BuildPipeline.BuildAssetBundles(mPath, 0, target);
 
+        //复制manifest索引文件
+        EncryptFile(mPath + "AssetBundles", toPath + "AssetBundles");
+
         //复制资源
-        foreach (FileInfo mFile in mDirInfo.GetFiles(assetbundle_extension, SearchOption.AllDirectories))
+        foreach (FileInfo mFile in mDirInfo.GetFiles("*"+API.assetbundle_extension, SearchOption.AllDirectories))
         {
             string form = mFile.FullName;
             string to = form.Replace("\\", "/");
@@ -245,15 +246,15 @@ public class MePackager
     static BuildTarget GetTargetPlatform()
     {
         BuildTarget target = BuildTarget.Android;
-#if UNITY_STANDALONE
+#if UNITY_STANDALONE_WIN
         Debug.Log("build for win");
         target = BuildTarget.StandaloneWindows;
 #elif UNITY_IPHONE
 		Debug.Log ("build for ios");
-			target = BuildTarget.iOS;
+		target = BuildTarget.iOS;
 #elif UNITY_ANDROID
         Debug.Log ("build for android");
-			target = BuildTarget.Android;
+		target = BuildTarget.Android;
 #endif
         return target;
     }
