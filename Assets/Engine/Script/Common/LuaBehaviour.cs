@@ -239,6 +239,18 @@ public class LuaBehaviour : MonoBehaviour
         string source = (string.IsNullOrEmpty(e.Source)) ? "<no source>" : e.Source.Substring(0, e.Source.Length - 2);
         return string.Format("{0}\nLua (at {2})", e.Message, string.Empty, source);
     }
+
+    //挂接回调调用函数：一般用于jni或者invoke等操作
+    public void MeMessage(object arg)
+    {
+        Messenger.Broadcast<object>(this.name + "MeMessage", arg);
+    }
+
+    //挂接回调调用函数：一般用于jin或者invoke等操作
+    public void MeMessageAll(object arg)
+    {
+        Messenger.Broadcast<object>("MeMessageAll", arg);
+    }
 }
 
 
