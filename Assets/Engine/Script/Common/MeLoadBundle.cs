@@ -36,14 +36,15 @@ public class MeLoadBundle : MonoBehaviour {
     
     AssetBundle LoadBundle(string fname)
     {
-        string uri = fname;// getFullPathName(fname);
-
+        fname = API.AssetPath + fname;// getFullPathName(fname);
+ 
         AssetBundle bundle = null;
-        if (!BundleTable.ContainsKey(uri))
+        if (!BundleTable.ContainsKey(fname))
         {
             byte[] data = null;
-            LoadDependencies(uri);
-            data = System.IO.File.ReadAllBytes(uri);
+          
+            data = System.IO.File.ReadAllBytes(fname);
+
             API.Encrypt(ref data);
             bundle = AssetBundle.CreateFromMemoryImmediate(data); 
             BundleTable.Add(fname, bundle);
@@ -118,7 +119,7 @@ public class MeLoadBundle : MonoBehaviour {
         }
         else
         {
-            uri = "file:///" + API.AssetPath + fname + ".ab";
+            uri = "file:///" + API.AssetPath + fname + API.assetbundle_extension;
         }
         return uri;
     }
@@ -128,7 +129,7 @@ public class MeLoadBundle : MonoBehaviour {
         string uri = getFullPathName(name);
 
         //检测加载依赖
-        LoadDependencies(name);
+        LoadDependencies(uri);
 
         WWW www = new WWW(uri);
         yield return www;
@@ -172,15 +173,21 @@ public class MeLoadBundle : MonoBehaviour {
     /// 载入依赖
     /// </summary>
     /// <param name="name"></param>
-    void LoadDependencies(string name)
+    void LoadDependencies(string fname)
     {
         if (manifest == null)
         {
             Debug.LogError("manifest==null");
             return;
         }
+
+        string dpname = fname.Replace("\\", "/");
+        int idx = dpname.LastIndexOf("/") + 1;
+        dpname = dpname.Substring(idx, dpname.Length - idx);
+
         // Get dependecies from the AssetBundleManifest object..
-        string[] dependencies = manifest.GetAllDependencies(name);
+        string[] dependencies = manifest.GetAllDependencies(dpname);
+       
         if (dependencies.Length == 0) return;
 
         for (int i = 0; i < dependencies.Length; i++)
@@ -188,7 +195,8 @@ public class MeLoadBundle : MonoBehaviour {
 
         // Record and load all dependencies.
         for (int i = 0; i < dependencies.Length; i++)
-        {            
+        {
+            Debug.Log(fname+":加载依赖库:" + dependencies[i]);
             LoadBundle(dependencies[i]);
         }
     }

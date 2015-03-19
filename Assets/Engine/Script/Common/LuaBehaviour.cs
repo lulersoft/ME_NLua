@@ -19,6 +19,7 @@ public class LuaBehaviour : MonoBehaviour
     [System.NonSerialized]
     public bool usingFixedUpdate = false;
     public int UID;
+    public int Draggable = -1;
     protected bool isLuaReady = false;
     private string script = "";
   
