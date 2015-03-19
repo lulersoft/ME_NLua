@@ -35,15 +35,13 @@ public class MeLoadBundle : MonoBehaviour {
 	}
     
     AssetBundle LoadBundle(string fname)
-    {
-        fname = API.AssetPath + fname;// getFullPathName(fname);
- 
+    {    
         AssetBundle bundle = null;
         if (!BundleTable.ContainsKey(fname))
         {
             byte[] data = null;
           
-            data = System.IO.File.ReadAllBytes(fname);
+            data = System.IO.File.ReadAllBytes(API.AssetPath + fname);
 
             API.Encrypt(ref data);
             bundle = AssetBundle.CreateFromMemoryImmediate(data); 
