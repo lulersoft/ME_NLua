@@ -1,22 +1,28 @@
 #ME 游戏框架 for nlua
 <b>ME_Unity3D-NLua是一个基于unity+nlua技术的全LUA免费开源（带有资源下载功能）游戏框架</b>
 
-基于https://github.com/Mervill/Unity3D-NLua
-
 整理：小陆(QQ2604904) 参与者：顶梁猪(QQ756500), html5solo
 
-感谢 骏擎【CP】提供编译好的各平台lua动态链接库
+感谢 骏擎【CP】提供编译好的wp和android和ios平台lua动态链接库
 
 ##友情提醒
 
 本游戏框架目前在参与者的不同实战项目中一边使用一边改动，代码改动可能是常态。
+
+##<font color="red">本框架需要以下条件</font>
+
+1)unity3d 版本为 5.0以上
+
+2)Unity3D-NLua项目 地址 https://github.com/Mervill/Unity3D-NLua
+
+***请自行下载Unity3D-NLua覆盖导入到本u3d工程项目目录***
 
 ##框架目标
 
 <b>使用lua 编写2D,3D全平台运行游戏，一次编写，到处发布</b>
 
 ##核心思路
-ME框架的思路就是 一个GameObject 对应挂个LuaBehaviour.cs脚本，这个LuaBehaviour.cs脚本DoFile一个lua脚本，lua脚本和LuaBehaviour.cs和GameObject都可以交互控制。
+ME框架的思路就是 一个GameObject 对应挂个LuaBehaviour.cs脚本，这个LuaBehaviour.cs脚本DoFile一个lua脚本，lua脚本和LuaBehaviour.cs交互控制。
 
 各各GameObject间通过Lua 消息进行通信。
 
