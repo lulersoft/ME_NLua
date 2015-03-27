@@ -9,11 +9,11 @@
 
 本游戏框架目前在参与者的不同实战项目中一边使用一边改动，代码改动可能是常态。
 
-##<font color="red">本框架需要以下条件</font>
+##本框架依赖条件
 
 1)unity3d 版本为 5.0以上
 
-2)Unity3D-NLua项目 地址 https://github.com/Mervill/Unity3D-NLua
+2)<font color=red>Unity3D-NLua项目</font> 地址 https://github.com/Mervill/Unity3D-NLua
 
 ***请自行下载Unity3D-NLua覆盖导入到本u3d工程项目目录***
 
