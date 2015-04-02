@@ -13,9 +13,11 @@
 
 1)unity3d 版本为 5.0以上
 
-2)<font color=red>Unity3D-NLua项目</font> 地址 https://github.com/Mervill/Unity3D-NLua
+2)Unity3D-NLua项目 地址 https://github.com/Mervill/Unity3D-NLua
 
-***请自行下载Unity3D-NLua覆盖导入到本u3d工程项目目录***
+3)BestHTTP 详细 https://www.baidu.com/s?wd=besthttp
+
+***请自行下载Unity3D-NLua和BestHTTP覆盖or导入到本u3d工程项目目录***
 
 ##框架目标
 

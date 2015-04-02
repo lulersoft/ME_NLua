@@ -8,6 +8,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using System.IO;
 using System.ComponentModel;
 using System.Security.Cryptography;
+using BestHTTP;
 using NLua;
 /// <summary>
 /// 后面将制作菜单用来搜索所有用得到的delegate Type，自动生成 N lua delegate.
@@ -106,8 +107,6 @@ public class API
                 lua["package.path"] = lua["package.path"] + ";" + API.AssetRoot + "lua/?.lua;";
 
                 LuaBinder.RegisterNLuaDelegate(lua);
-
-                InitApp();
             }
             return lua;
         }
@@ -175,14 +174,6 @@ public class API
     }
 
 
-    public static void InitApp()
-    {
-        if (MeMission.obj == null)
-        {
-            MeMission.obj = new GameObject("~MeMission");
-            MeMission.obj.AddComponent<MeMission>();
-        }
-    }
 
     #region DebugTools
     public static void Log(object msg)
@@ -195,6 +186,12 @@ public class API
             {
                 DebugTools.obj = new GameObject("~DebugTools");
                 DebugTools.obj.AddComponent<DebugTools>();
+                GameObject meGo = GameObject.Find("~ME~");
+                if (meGo==null )
+                {
+                    meGo = new GameObject("~ME~");
+                }
+                DebugTools.obj.transform.SetParent(meGo.transform);
             }
         }
     }
@@ -248,6 +245,41 @@ public class API
         }
         return _out;
     }
+
+    public static void StartCoroutine(IEnumerator ie)
+    {
+        if (MeLoadBundle.obj == null)
+        {
+            MeLoadBundle.obj = new GameObject("~MeLoadBundle");
+            MeLoadBundle.obj.AddComponent<MeLoadBundle>();
+            GameObject meGo = GameObject.Find("~ME~");
+            if (meGo == null)
+            {
+                meGo = new GameObject("~ME~");
+            }
+            MeLoadBundle.obj.transform.SetParent(meGo.transform);
+        }
+        MeLoadBundle.self.StartCoroutine(ie);
+    }
+
+    public static void RunCoroutine(YieldInstruction ins, LuaFunction func,  object args)
+    {
+        API.StartCoroutine(doCoroutine(ins, func, args));
+    }
+
+    private static IEnumerator doCoroutine(YieldInstruction ins, LuaFunction func, object args)
+    {
+        yield return ins;
+        if (args != null)
+        {
+            func.Call(args);
+        }
+        else
+        {
+            func.Call();
+        }
+    }
+
     //zip压缩
     public static void PackFiles(string filename, string directory)
     {
@@ -315,59 +347,68 @@ public class API
         }
     }
 
-    public static WebClientEx SendRequest(string url, string data, LuaFunction progressHander, LuaFunction completeHandler)
+    //异步HTTP
+    public static void SendRequest(string url, string data, LuaFunction completeHandler)
     {
-        WebClientEx webClient = new WebClientEx();
-        webClient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";  //采取POST方式必须加的header，如果改为GET方式的话就去掉这句话即可  
-        webClient.Encoding = System.Text.UTF8Encoding.UTF8;
-        System.Uri uri = new System.Uri(url);
-
-        webClient.UploadProgressChanged += (object sender, UploadProgressChangedEventArgs e) =>
+        //如果web页面是静态返回数据，请用HTTPMethods.Get
+        var request = new HTTPRequest(new Uri(url), HTTPMethods.Get, (req, resp) =>
         {
-            progressHander.Call(sender, new MeUploadProgressChangedEventHandler(e.BytesReceived, e.BytesSent, e.TotalBytesToReceive, e.TotalBytesToSend));
-        };
-        webClient.UploadStringCompleted += (object sender, UploadStringCompletedEventArgs e) =>
-        {
-            completeHandler.Call(sender, new MeUploadStringCompletedEventHandler(e.Error, e.Cancelled, e.Result));
-        };
-
-        try
-        {
-            webClient.UploadStringAsync(uri, "POST", data);//得到返回字符流      
-        }
-        catch (NLua.Exceptions.LuaException e)
-        {
-            API.Log("Post err " + e.Message);
-        }
-        //返回client ，可用 client.CancelAsync(); 中断下载
-        return webClient;
+            if (completeHandler != null)
+            {
+                completeHandler.Call(req, resp);  //req, resp 需要暴露给slua导出         
+            }
+        });
+        request.RawData = Encoding.UTF8.GetBytes(data);
+        request.ConnectTimeout = TimeSpan.FromSeconds(3);//3秒超时
+        request.Send();
     }
 
-    //异步下载
-    public static WebClient DownLoad(string src, string SavePath, LuaFunction progressHander, LuaFunction completeHander)
+    //异步下载，参数  complete_param 是完成回调的执行参数
+    public static void DownLoad(string SrcFilePath, string SaveFilePath, object complete_param, LuaFunction progressHander, LuaFunction completeHander)
     {
-        WebClient client = new WebClient();
-        client.DownloadProgressChanged += (object sender, DownloadProgressChangedEventArgs e) =>
+        var request = new HTTPRequest(new Uri(SrcFilePath), (req, resp) =>
         {
-            progressHander.Call(sender, new MeDownloadProgressChangedEventHandler(e.BytesReceived, e.TotalBytesToReceive));
+            List<byte[]> fragments = resp.GetStreamedFragments();
+            // Write out the downloaded data to a file:
+            using (FileStream fs = new FileStream(SaveFilePath, FileMode.Append))
+                foreach (byte[] data in fragments)
+                    fs.Write(data, 0, data.Length);
+            if (resp.IsStreamingFinished)
+            {
+                if (completeHander != null)
+                {
+                    API.StartCoroutine(onDownLoadCompleted(completeHander,complete_param, req,resp));
+                    Debug.Log("Download finished!");
+                }
+            }
+        });
+        request.OnProgress = (req, downloaded, length) =>
+        {
+            if (progressHander != null)
+            {
+                double pg = Math.Round((float)downloaded / (float)length, 2);
+                progressHander.Call(pg);
+            }
         };
-        client.DownloadFileCompleted += (object sender, AsyncCompletedEventArgs e) =>
-        {
-            completeHander.Call(sender, new MeAsyncCompletedEventArgs(e.Error, e.Cancelled, e.UserState));
-        };
-        try
-        {
-            client.DownloadFileAsync(new System.Uri(src), SavePath);
-        }
-        catch (NLua.Exceptions.LuaException e)
-        {
-            API.Log("AsyncDownLoad err:" + e.Message);
-        }
-
-        //返回client ，可用 client.CancelAsync(); 中断下载
-        return client;
+        request.UseStreaming = true;
+        request.StreamFragmentSize = 1 * 1024 * 1024; // 1 megabyte
+        request.DisableCache = true; // already saving to a file, so turn off caching
+        request.Send();
     }
 
+   static IEnumerator onDownLoadCompleted(LuaFunction completeHander, object complete_param,HTTPRequest req,HTTPResponse resp)
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (complete_param != null)
+        {
+            completeHander.Call(req, resp, complete_param);
+        }
+        else
+        {
+            completeHander.Call(req, resp);
+        }
+    }
     //时钟
     public static MeTimer AddTimer(float interval, Callback<MeTimer> onTimerHander)
     {
@@ -379,6 +420,12 @@ public class API
         {
             LuaMeTimer.obj = new GameObject("~LuaMeTimer");
             LuaMeTimer.obj.AddComponent<LuaMeTimer>();
+            GameObject meGo = GameObject.Find("~ME~");
+            if (meGo == null)
+            {
+                meGo = new GameObject("~ME~");
+            }
+            LuaMeTimer.obj.transform.SetParent(meGo.transform);
         }
         MeTimer timer = new MeTimer();
         timer.onTimer = onTimerHander;
@@ -587,6 +634,12 @@ public class API
         {
             MeLoadBundle.obj = new GameObject("~MeLoadBundle");
             MeLoadBundle.obj.AddComponent<MeLoadBundle>();
+            GameObject meGo = GameObject.Find("~ME~");
+            if (meGo == null)
+            {
+                meGo = new GameObject("~ME~");
+            }
+            MeLoadBundle.obj.transform.SetParent(meGo.transform);
         }
         MeLoadBundle.self.LoadBundle(fname, handler,arg);
     }
@@ -613,11 +666,6 @@ public class API
         {
             MeLoadBundle.self.UnLoadBundle(key);
         }
-    }
-    //回归主线程
-    public static void AddMission(LuaFunction func, object args)
-    {
-        MeMission.self.AddMission(new MissionPack(func, args));
     }
 
     #region 消息中心
