@@ -22,8 +22,9 @@ public class LuaBehaviour : MonoBehaviour
     public int Draggable = -1;
     protected bool isLuaReady = false;
     private string script = "";
+    private string requireFile = "";
   
-    protected LuaTable table;
+    protected LuaTable table;    
  
     //保存的lua 数据存取
     public LuaTable data{get;set;} 
@@ -49,16 +50,18 @@ public class LuaBehaviour : MonoBehaviour
         {
             CallMethod("FixedUpdate");
         }
-    }         
+    } 
 
-    public void DestroyMe()
-    {
-        Destroy(gameObject);
-    }
     protected void OnDestroy()
     {    
 
         CallMethod("OnDestroy");
+
+		if (requireFile.Length > 0)
+        {
+            string source = "package.loaded[\"" + requireFile + "\"] = nil";            
+            API.env.DoString(source); 
+        }
 
         if (table != null)
         {
@@ -247,6 +250,15 @@ public class LuaBehaviour : MonoBehaviour
     public void MeMessage(object arg)
     {
         Messenger.Broadcast<object>(this.name + "MeMessage", arg);
+    }
+
+    public string eventType = null;
+    public void CustomMessage(object arg)
+    {
+        if (eventType != null)
+        {
+            Messenger.Broadcast<object>(eventType, arg);
+        }       
     }
 
     //挂接回调调用函数：一般用于jin或者invoke等操作
