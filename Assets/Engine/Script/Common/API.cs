@@ -267,7 +267,7 @@ public class API
         API.StartCoroutine(doCoroutine(ins, func, args));
     }
 
-    private static IEnumerator doCoroutine(YieldInstruction ins, LuaFunction func, object args)
+    private static IEnumerator doCoroutine(YieldInstruction ins, LuaFunction func, params object[] args)
     {
         yield return ins;
         if (args != null)
