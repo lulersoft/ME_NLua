@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿﻿using UnityEngine;
 using System.Collections;
 using NLua;
 
@@ -82,9 +82,11 @@ public class MeLoadBundle : MonoBehaviour {
     {
         string key = "";
         foreach (DictionaryEntry de in BundleTable)
-        {
-            key = de.Key.ToString();
-            break;
+        {            
+			if (bundle == (AssetBundle)de.Value){
+            	key = de.Key.ToString();        	
+            	break; 
+        	}
         }
 
         if (BundleTable.ContainsKey(key))
