@@ -50,7 +50,7 @@ public class MeLoadBundle : MonoBehaviour {
         {
             QuequePack pack = LoadQueueList[0];
             LoadQueueList.RemoveAt(0);
-            StartLoadBundle(pack.fname,pack.handler);
+            StartLoadBundle(pack.fname,pack.handler,pack.arg);
         }
     }
     
