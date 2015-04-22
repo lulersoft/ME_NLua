@@ -1,5 +1,6 @@
 ﻿﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using NLua;
 
 public class MeLoadBundle : MonoBehaviour {
@@ -163,9 +164,10 @@ public class MeLoadBundle : MonoBehaviour {
         LoadDependencies(uri);
 
         WWW www = new WWW(uri);
-        yield return www;
+        //yield return www;
         if (www.error != null)
         {
+            isReady = true;
             API.Log("Warning erro: " + www.error);
             StopCoroutine("onLoadBundle");
             yield break;
@@ -192,6 +194,7 @@ public class MeLoadBundle : MonoBehaviour {
         }
         catch (NLua.Exceptions.LuaException e)
         {
+            isReady = true;
             Debug.LogError(FormatException(e), gameObject);
         }
     }
