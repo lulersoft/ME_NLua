@@ -15,7 +15,7 @@ public class MeLoadBundle : MonoBehaviour {
 
     struct QuequePack{
         public string fname;
-        public Callback<string, AssetBundle> handler;
+        public Callback<string, AssetBundle,object> handler;
         public object arg;
     }
 
@@ -75,7 +75,7 @@ public class MeLoadBundle : MonoBehaviour {
         return bundle;
     }
 
-    public void LoadBundle(string fname, Callback<string, AssetBundle> handler,object arg)
+    public void LoadBundle(string fname, Callback<string, AssetBundle,object> handler,object arg)
     {
         QuequePack pack = new QuequePack();
         pack.fname = fname;
@@ -84,7 +84,7 @@ public class MeLoadBundle : MonoBehaviour {
         LoadQueueList.Add(pack);
     }
 
-    private void StartLoadBundle (string fname, Callback<string, AssetBundle> handler,object arg)
+    private void StartLoadBundle (string fname, Callback<string, AssetBundle,object> handler,object arg)
     {
         isReady=false;
         if (BundleTable.ContainsKey(fname))
